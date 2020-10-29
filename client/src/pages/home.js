@@ -6,7 +6,7 @@ import clsx from "clsx";
 import withStyles from "@material-ui/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 
-axios.defaults.baseURL = "https://localhost:3000/";
+axios.defaults.baseURL = "https://dashboard.heroku.com/apps/psw-server";
 
 const styles = (theme) => ({
   content: {
