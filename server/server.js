@@ -24,6 +24,8 @@ mongoose.connect(process.env.MONGODB_URI || PORT, {
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(cors());
+
 app.use(bodyParser.json());
 app.use('/api/users', userRouter);
 
@@ -32,7 +34,7 @@ app.listen(PORT, () => console.log(`Node.js Server is running on port ${PORT}`))
 // CHANGE DATABASE IN .env
 
 // app.use(express.json());
-// app.use(cors());
+
 
 // const api = require('./routes/index.js');
 // app.use('/api', api);
