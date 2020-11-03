@@ -36,7 +36,7 @@ class login extends Component {
 
     // CHANGE LOCAL DATABASE LINK TO HEROKU DATABASE LINK
     axios
-      .post("/api/login", userData)
+      .post("/users/login", userData)
       .then((res) => {
         //this.props.history.push("/user");
         //console.log(res.body);
