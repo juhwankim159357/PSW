@@ -1,5 +1,4 @@
 // DEFINES DATABASE OBJECT FOR USERS
-
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({

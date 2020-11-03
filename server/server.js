@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3001;
 
 // Import Routes
 const userRouter = require('./routes/userRouter');
+const jobRouter = require('./routes/jobRouter');
 
 const cors = require('cors');
 const bodyParser = require("body-parser");
@@ -28,6 +29,7 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use('/api/users', userRouter);
+app.use('/api/jobs', jobRouter);
 
 app.listen(PORT, () => console.log(`Node.js Server is running on port ${PORT}`));
 
