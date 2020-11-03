@@ -38,14 +38,14 @@ class login extends Component {
     axios
       .post("/users/login", userData)
       .then((res) => {
-        //this.props.history.push("/user");
-        //console.log(res.body);
-        // localStorage.setItem("x-auth-token", res.data.token);
-        // axios.defaults.headers.common["Authorization"] = res.data.token;
+        this.props.history.push("/user");
+        console.log(res.body);
+        localStorage.setItem("x-auth-token", res.data.token);
+        axios.defaults.headers.common["Authorization"] = res.data.token;
       })
       .catch((err) => {
-        //this.props.history.push("/");
-        //console.log(err.message);
+        this.props.history.push("/");
+        console.log(err.message);
       });
   };
 
