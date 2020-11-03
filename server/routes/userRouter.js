@@ -96,7 +96,7 @@ router.post("/login", async (req, res) => {
         },
     });
   } catch (err) {
-    res.json(500).json({ error: err.message });
+    res.send(err.message);
   }
 });
 

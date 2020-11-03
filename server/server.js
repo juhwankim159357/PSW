@@ -35,7 +35,6 @@ app.listen(PORT, () => console.log(`Node.js Server is running on port ${PORT}`))
 
 // app.use(express.json());
 
-
 // const api = require('./routes/index.js');
 // app.use('/api', api);
 
