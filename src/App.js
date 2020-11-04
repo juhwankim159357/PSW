@@ -15,6 +15,7 @@ import login from "./pages/login";
 import signup from "./pages/signup";
 import User from "./pages/user";
 import jobs from "./pages/jobs";
+import addjob from "./pages/addJob";
 
 const theme = createMuiTheme(themeFile);
 
@@ -72,6 +73,7 @@ class App extends Component {
                   )}
                 />
                 <Route exact path="/jobs" component={jobs} />
+                <Route exact path="/jobs/addJob" component={addjob}/>
               </Switch>
             </div>
           </Router>
