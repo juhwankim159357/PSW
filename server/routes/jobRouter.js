@@ -13,9 +13,15 @@ router.get("/test", (req, res) => {
   res.send("job router working");
 });
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   // TODO GET ALL JOB POSTINGS
   // POST IN LIST
+  try {
+    const jobList = await JobPosting.find();
+    res.send(jobList);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.get("/job-details", (req, res) => {
@@ -35,22 +41,26 @@ router.post("/post-job", async (req, res) => {
       requirements,
     } = req.body;
 
-    const existingPosting = await JobPosting.findOne({positionTitle: positionTitle});
-    if(existingPosting && existingPosting.companyName == companyName) return res.status(400).json({ message: "Duplicate posting, consider updating number of hires."});
+    const existingPosting = await JobPosting.findOne({
+      positionTitle: positionTitle,
+    });
+    if (existingPosting && existingPosting.companyName == companyName)
+      return res.status(400).json({
+        message: "Duplicate posting, consider updating number of hires.",
+      });
 
     const newJobPost = new JobPosting({
-        positionTitle,
-        companyName,
-        contractType,
-        description,
-        duties,
-        requirements,
+      positionTitle,
+      companyName,
+      contractType,
+      description,
+      duties,
+      requirements,
     });
     const savedJobPost = await newJobPost.save();
     res.json(savedJobPost);
-
   } catch (err) {
-      res.status(500).json({ error: err.message});
+    res.status(500).json({ error: err.message });
   }
 });
 
