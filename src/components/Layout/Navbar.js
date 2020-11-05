@@ -73,7 +73,7 @@ class Navbar extends Component {
                   <MenuIcon />
                 </IconButton>
                 <Button color="inherit" omponent={Link} to="/">
-                  <Typography variant="p" noWrap>
+                  <Typography noWrap>
                     Menu
                   </Typography>
                 </Button>
@@ -81,13 +81,13 @@ class Navbar extends Component {
 
               <Grid item>
                 <Button color="inherit" component={Link} to="/signup">
-                  <Typography variant="p" noWrap>
+                  <Typography noWrap>
                     Signup
                   </Typography>
                 </Button>
 
                 <Button color="inherit" component={Link} to="/login">
-                  <Typography variant="p" noWrap>
+                  <Typography noWrap>
                     Login
                   </Typography>
                 </Button>
