@@ -6,8 +6,8 @@ const jobPostingSchema = new mongoose.Schema({
     companyName: {type: String, required: true},
     contractType: {type: String, required: true},
     description: {type: String, required: true},
-    duties: {type: String, required: true},
-    requirements: {type: String, required: true},
+    duties: {type: Array, "default": [], required: true},
+    requirements: {type: Array, "default": [],required: true},
 });
 
 // Use User to interact with User in database

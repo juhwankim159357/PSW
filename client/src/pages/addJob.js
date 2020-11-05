@@ -78,6 +78,46 @@ export class addJob extends Component {
               value={this.state.positionTitle}
               onCHange={this.handleChange}
             />
+            <TextField
+              id="companyName"
+              name="companyName"
+              type="companyName"
+              label="Company Name"
+              fullWidth
+              className={classes.textField}
+              value={this.state.companyName}
+              onCHange={this.handleChange}
+            />
+            <TextField
+              id="contractType"
+              name="contractType"
+              type="contractType"
+              label="Contract Type"
+              fullWidth
+              className={classes.textField}
+              value={this.state.contractType}
+              onCHange={this.handleChange}
+            />
+            <TextField
+              id="description"
+              name="description"
+              type="description"
+              label="Job Description"
+              fullWidth
+              className={classes.textField}
+              value={this.state.description}
+              onCHange={this.handleChange}
+            />
+            <TextField
+              id="duties"
+              name="duties"
+              type="duties"
+              label="Duties"
+              fullWidth
+              className={classes.textField}
+              value={this.state.duties}
+              onCHange={this.handleChange}
+            />
           </form>
         </Grid>
         <Grid item sm />
