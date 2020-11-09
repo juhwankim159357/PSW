@@ -8,6 +8,7 @@ const auth = require("../middleware/auth");
 
 // Routers
 const User = require("../models/userModel");
+const { route } = require("./jobRouter");
 
 router.get("/test", (req, res) => {
   res.send("~/users/test is working");
@@ -108,10 +109,11 @@ router.post("/tokenIsValid", async (req, res) => {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     if (!verified) return res.json(false);
 
+    // Return the verified user
     const user = await User.findById(verified.id);
     if (!user) return res.json(false);
 
-    return res.json(true);
+    return res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
