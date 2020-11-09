@@ -16,6 +16,8 @@ import signup from "./pages/signup";
 import User from "./pages/user";
 import jobs from "./pages/jobs";
 import addjob from "./pages/addJob";
+import UserContext from "./context/UserContext";
+import axios from "axios";
 
 const theme = createMuiTheme(themeFile);
 
@@ -26,11 +28,17 @@ class App extends Component {
     this.state = {
       isOpen: false,
       isLoaded: false,
-      token: "",
-      user: {},
-      validToken: false,
+      userData: {
+        token: "",
+        user: {},
+      },
+      authenticated: false,
     };
   }
+
+  setUserData = () => {
+
+  };
 
   handleDrawerOpen = () => {
     this.setState({ isOpen: true });
@@ -43,7 +51,8 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-          <Router>
+        <Router>
+          <UserContext.Provider value={this.state.userData, this.setUserData.bind(this)}>
             <Navbar
               isOpen={this.state.isOpen}
               userRole={this.state.userRole}
@@ -73,10 +82,11 @@ class App extends Component {
                   )}
                 />
                 <Route exact path="/jobs" component={jobs} />
-                <Route exact path="/jobs/addJob" component={addjob}/>
+                <Route exact path="/jobs/addJob" component={addjob} />
               </Switch>
             </div>
-          </Router>
+          </UserContext.Provider>
+        </Router>
       </MuiThemeProvider>
     );
   }
