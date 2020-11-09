@@ -8,24 +8,25 @@ const auth = require("../middleware/auth");
 
 // Routers
 const User = require("../models/userModel");
+const { route } = require("./jobRouter");
 
 router.get("/test", (req, res) => {
   res.send("~/users/test is working");
 });
 
 router.get("/testAuth", auth, async (req, res) => {
-    res.send("~/users/auth middleware works!");
-    console.log(req.user);
+  res.send("~/users/auth middleware works!");
+  console.log(req.user);
 });
 
 router.get("/", auth, async (req, res) => {
-    const user = await User.findById(req.user);
-    res.json(user);
-})
+  const user = await User.findById(req.user);
+  res.json(user);
+});
 
 router.post("/signup", async (req, res) => {
   try {
-    let { email, password, confirmPassword, userRole, userName, } = req.body;
+    let { email, password, confirmPassword, userRole, userName } = req.body;
 
     // Validation
     if (!email || !password || !confirmPassword || !userRole)
@@ -87,35 +88,35 @@ router.post("/login", async (req, res) => {
     // If we need a logged in used, we pass the token.
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     res.json({
-        token,
-        user: {
-            id: user._id,
-            userName: user.userName,
-            email: user.email,
-            userRole: user.userRole
-        },
+      token,
+      user: {
+        id: user._id,
+        userName: user.userName,
+        email: user.email,
+        userRole: user.userRole,
+      },
     });
   } catch (err) {
     res.send(err.message);
   }
 });
 
-router.post("/tokenIsValid", async(req,res) => {
-    try{
-        const token = req.header("x-auth-token");
-        if(!token) return res.json(false);
+router.post("/tokenIsValid", async (req, res) => {
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) return res.json(false);
 
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
-        if(!verified) return res.json(false);
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    if (!verified) return res.json(false);
 
-        const user = await User.findById(verified.id);
-        if(!user) return res.json(false);
+    // Return the verified user
+    const user = await User.findById(verified.id);
+    if (!user) return res.json(false);
 
-        return res.json(true);
-    } catch (err) {
-        res.status(500).json({error: err.message});
-    }
-})
+    return res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;
-

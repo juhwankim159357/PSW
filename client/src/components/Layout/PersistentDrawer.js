@@ -49,7 +49,7 @@ const styles = (theme) => ({
   },
 });
 
-class TempDrawer extends Component {
+class PersistentDrawer extends Component {
   render() {
     const { classes } = this.props;
     let drawerHeaderText;
@@ -132,8 +132,8 @@ class TempDrawer extends Component {
           {unauthenticatedList.map((item, index) => {
             const { text, linkTo, divider } = item;
             return (
-              <Link to={linkTo} underline="none" color="textPrimary">
-                <ListItem button key={text} divider={divider ? divider : false}>
+              <Link to={linkTo} underline="none" color="textPrimary" key={index}>
+                <ListItem button divider={divider ? divider : false}>
                   <ListItemText primary={text} />
                 </ListItem>
               </Link>
@@ -148,8 +148,8 @@ class TempDrawer extends Component {
           {candidateList.map((item, index) => {
             const { text, linkTo, divider } = item;
             return (
-              <Link to={linkTo} underline="none" color="textPrimary">
-                <ListItem button key={text} divider={divider ? divider : false}>
+              <Link to={linkTo} underline="none" color="textPrimary" key={index}>
+                <ListItem button divider={divider ? divider : false}>
                   <ListItemText primary={text} />
                 </ListItem>
               </Link>
@@ -164,8 +164,8 @@ class TempDrawer extends Component {
           {employerList.map((item, index) => {
             const { text, linkTo } = item;
             return (
-              <Link to={linkTo} underline="none" color="textPrimary">
-                <ListItem button key={text}>
+              <Link to={linkTo} underline="none" color="textPrimary" key={index}>
+                <ListItem button>
                   <ListItemText primary={text} />
                 </ListItem>
               </Link>
@@ -202,4 +202,4 @@ class TempDrawer extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(TempDrawer));
+export default withRouter(withStyles(styles)(PersistentDrawer));
