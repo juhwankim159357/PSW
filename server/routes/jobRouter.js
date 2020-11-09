@@ -13,7 +13,7 @@ router.get("/test", (req, res) => {
   res.send("job router working");
 });
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   // TODO GET ALL JOB POSTINGS
   // POST IN LIST
   try {

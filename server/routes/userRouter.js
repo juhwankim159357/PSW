@@ -119,4 +119,8 @@ router.post("/tokenIsValid", async (req, res) => {
   }
 });
 
+router.get("/testauth", auth, async(req, res) => {
+  res.send(`auth works ${res.user}`);
+})
+
 module.exports = router;

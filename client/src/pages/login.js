@@ -39,7 +39,6 @@ class login extends Component {
       .post("/users/login", userData)
       .then((res) => {
         this.props.history.push("/user");
-        console.log(res.body);
         localStorage.setItem("x-auth-token", res.data.token);
         axios.defaults.headers.common["Authorization"] = res.data.token;
       })
@@ -47,6 +46,8 @@ class login extends Component {
         this.props.history.push("/");
         console.log(err.message);
       });
+
+      //console.log(`Token = ${localStorage.getItem("x-auth-token")}`);
   };
 
   handleChange = (event) => {

@@ -14,7 +14,13 @@ const styles = {
   ...theme.vibeTheme,
 };
 
+
 class jobs extends Component {
+  constructor() {
+    super();
+    if(!localStorage.getItem("x-auth-token")) 
+     window.location = "/login";
+  }
   render() {
     const { classes } = this.props;
 
