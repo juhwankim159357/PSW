@@ -15,6 +15,7 @@ const auth = async (req, res, next) => {
         .status(400)
         .json({ message: "Token verification failed, authorization denied." });
 
+    // Return user to client
     req.user = verified.id;
     console.log(req.user);
     next();

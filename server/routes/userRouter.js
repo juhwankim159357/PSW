@@ -19,9 +19,14 @@ router.get("/testAuth", auth, async (req, res) => {
   console.log(req.user);
 });
 
-router.get("/", auth, async (req, res) => {
-  const user = await User.findById(req.user);
-  res.json(user);
+router.get("/", async (req, res) => {
+  User.find({}, (err, users) => {
+    if(err) {
+      res.send("Something went wrong.");
+      next();
+    }
+    res.json(users);
+  })
 });
 
 router.post("/signup", async (req, res) => {
@@ -104,6 +109,7 @@ router.post("/login", async (req, res) => {
 router.post("/tokenIsValid", async (req, res) => {
   try {
     const token = req.header("x-auth-token");
+    console.log(token);
     if (!token) return res.json(false);
 
     const verified = jwt.verify(token, process.env.JWT_SECRET);
@@ -119,8 +125,22 @@ router.post("/tokenIsValid", async (req, res) => {
   }
 });
 
-router.get("/testauth", auth, async(req, res) => {
-  res.send(`auth works ${res.user}`);
+router.get("/:userName", (req, res) => {
+  User.findOne({ userName: req.params.userName})
+  .then(userFound => {
+    if(!userFound) { return res.status(404).end(); }
+    return res.status(200).json(userFound);
+  })
+  .catch (err => next(err));
+})
+
+router.get("/user", auth, (req, res) => {
+  let test = User.findOne({userName: req.user.userName})
+  .then(userFound => {
+    if(!userFound) {return res.status(404).end(); }
+    return res.status(200).json(userFound);
+  })
+  .catch (err => next(err));
 })
 
 module.exports = router;

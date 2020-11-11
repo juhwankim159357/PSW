@@ -1,12 +1,21 @@
 import React, { Component } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import axios from "axios";
 
 //MUI Stuff
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import themeFile from "./util/theme";
+import jwtDecode from "jwt-decode";
 
+// Redux
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import { SET_AUTHENTICATED } from "./redux/types";
+import { logoutUser, getUserData } from "./redux/actions/userActions";
+
+// Components
 import Navbar from "./components/Layout/Navbar";
 import PersistentDrawer from "./components/Layout/PersistentDrawer";
 
@@ -20,6 +29,21 @@ import UserContext from "./context/UserContext";
 import axios from "axios";
 
 const theme = createMuiTheme(themeFile);
+
+
+const token = localStorage.XAuthToken;
+if (token) {
+  const decodedToken = jwtDecode(token); //Gives token a field exp?
+  if (decodedToken.exp * 1000 < Date.now()) {
+    store.dispatch(logoutUser());
+    window.location.href = "/users/login";
+  } else {
+    store.dispatch({type: SET_AUTHENTICATED});
+    axios.defaults.headers.common['Authorization'] = token;
+    store.dispatch(getUserData());
+  }
+}
+
 
 // Three user roles, unauthenticated, candidate, employer
 class App extends Component {
@@ -51,8 +75,8 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <Router>
-          <UserContext.Provider value={this.state.userData, this.setUserData.bind(this)}>
+        <Provider store={store}>
+          <Router>
             <Navbar
               isOpen={this.state.isOpen}
               userRole={this.state.userRole}
@@ -85,8 +109,8 @@ class App extends Component {
                 <Route exact path="/jobs/addJob" component={addjob} />
               </Switch>
             </div>
-          </UserContext.Provider>
-        </Router>
+          </Router>
+        </Provider>
       </MuiThemeProvider>
     );
   }

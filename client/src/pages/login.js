@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
-//import PropTypes from "prop-types";
+import withStyle from "@material-ui/core/styles/withStyles";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 //MUI Stuff
@@ -8,7 +8,10 @@ import Grid from "@material-ui/core/Grid";
 import { Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import axios from "axios";
+
+// Redux
+import {connect} from 'react-redux';
+import {loginUser} from '../redux/actions/userActions';
 
 const styles = (theme) => ({
   ...theme.formTheme,
@@ -24,41 +27,47 @@ class login extends Component {
     };
   }
 
+  static getDerivedStateFromProps(nextProps) {
+    if(nextProps.UI.errors){
+      return {errors: nextProps.UI.errors};
+    }
+    else return null;
+  }
+
+
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      loading: true,
-    });
     const userData = {
       email: this.state.email,
       password: this.state.password,
     };
+    this.props.loginUser(userData, this.props.history);
 
     // CHANGE LOCAL DATABASE LINK TO HEROKU DATABASE LINK
-    axios
-      .post("/users/login", userData)
-      .then((res) => {
-        this.props.history.push("/user");
-        localStorage.setItem("x-auth-token", res.data.token);
-        axios.defaults.headers.common["Authorization"] = res.data.token;
-      })
-      .catch((err) => {
-        this.props.history.push("/");
-        console.log(err.message);
-      });
-
-      //console.log(`Token = ${localStorage.getItem("x-auth-token")}`);
+    // axios
+    //   .post("/users/login", userData)
+    //   .then((res) => {
+    //     this.props.history.push("/user");
+    //     console.log(res.body);
+    //     localStorage.setItem("x-auth-token", res.data.token);
+    //     axios.defaults.headers.common["Authorization"] = res.data.token;
+    //   })
+    //   .catch((err) => {
+    //     this.props.history.push("/");
+    //     console.log(err.message);
+    //   });
   };
 
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     });
-  };
+  }; 
 
   render() {
-    const { classes } = this.props;
+    const { classes, UI:{loading} } = this.props;
     const { errors } = this.state;
+
     return (
       <Grid container className={classes.form}>
         <Grid item sm></Grid>
@@ -73,8 +82,8 @@ class login extends Component {
               type="email"
               label="Email"
               className={classes.textField}
-              //  helperText={errors.email}
-              //   error={errors.email ? true : false}
+              helperText={errors.email}
+              error={errors.email ? true : false}
               value={this.state.email}
               onChange={this.handleChange}
               fullWidth
@@ -85,8 +94,8 @@ class login extends Component {
               type="password"
               label="Password"
               className={classes.textField}
-              //  helperText={errors.password}
-              //   error={errors.password ? true : false}
+              helperText={errors.password}
+              error={errors.password ? true : false}
               value={this.state.password}
               onChange={this.handleChange}
               fullWidth
@@ -101,7 +110,7 @@ class login extends Component {
               variant="contained"
               color="primary"
               className={classes.button}
-              //   disabled={loading}
+              disabled={loading}
             >
               Login
               {/* {loading && (
@@ -120,4 +129,20 @@ class login extends Component {
   }
 }
 
-export default withStyles(styles)(login);
+login.propTypes = {
+  classes: PropTypes.object.isRequired,
+  loginUser: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  UI: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI,
+});
+
+const mapActionsToProps ={
+  loginUser
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyle(styles)(login));
