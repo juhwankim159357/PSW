@@ -19,7 +19,7 @@ router.get("/testAuth", auth, async (req, res) => {
   console.log(req.user);
 });
 
-router.get("/", async (req, res) => {
+router.get("/", (req, res) => {
   User.find({}, (err, users) => {
     if(err) {
       res.send("Something went wrong.");

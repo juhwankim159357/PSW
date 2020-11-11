@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // Middleware
-//const auth = require("../middleware/auth");
+const auth = require("../middleware/auth");
 
 // Routers
 const JobPosting = require("../models/jobModel");
