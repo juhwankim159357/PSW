@@ -128,15 +128,19 @@ router.post("/tokenIsValid", async (req, res) => {
 router.get("/:userName", (req, res) => {
   User.findOne({ userName: req.params.userName})
   .then(userFound => {
-    if(!userFound) {return res.status(404).end(); }
+    if(!userFound) { return res.status(404).end(); }
     return res.status(200).json(userFound);
   })
   .catch (err => next(err));
 })
 
-router.get("/authenticatedUser", (req, res) => {
-  let userData = {};
-  mongoose.Document
+router.get("/user", auth, (req, res) => {
+  let test = User.findOne({userName: req.user.userName})
+  .then(userFound => {
+    if(!userFound) {return res.status(404).end(); }
+    return res.status(200).json(userFound);
+  })
+  .catch (err => next(err));
 })
 
 module.exports = router;
