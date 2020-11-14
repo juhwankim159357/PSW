@@ -23,8 +23,8 @@ import Home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import User from "./pages/user";
-import jobs from "./pages/jobs";
-import addjob from "./pages/addJob";
+import jobs from "./pages/jobs/jobs";
+import addjob from "./pages/jobs/addJob";
 
 const theme = createMuiTheme(themeFile);
 
