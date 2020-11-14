@@ -20,6 +20,7 @@ const styles = {
 
 class jobs extends Component {
   componentDidMount() {
+    console.log("jobs did mount");
     this.props.getAllJobs();
   }
 
@@ -28,10 +29,10 @@ class jobs extends Component {
     if (!localStorage.getItem("x-auth-token")) window.location = "/login";
   }
   render() {
-    // const { jobs, loading } = this.props.data;
+    const { jobs, loading } = this.props.data;
     const { classes } = this.props;
 
-    console.log(this.props.data);
+    //console.log(jobs);
 
     //TODO Map job list array
     // const jobList = [
