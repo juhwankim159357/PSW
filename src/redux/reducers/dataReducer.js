@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
     case SET_JOBS:
       return {
         ...state,
-        vibes: action.payload,
+        jobs: action.payload,
         loading: false,
       };
     default:

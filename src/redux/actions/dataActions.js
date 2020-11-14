@@ -15,6 +15,7 @@ export const getAllJobs = () => (dispatch) => {
   axios
     .get("/jobs")
     .then((res) => {
+      console.log(res.data);
       dispatch({
         type: SET_JOBS,
         payload: res.data,
@@ -32,7 +33,7 @@ export const getUserData = (userHandle) => (dispatch) => {
         console.log(res);
         dispatch({
           type: SET_JOBS,
-          payload: res.data.vibes,
+          payload: res.data.jobs,
         });
         resolve(res.data.user);
       })
