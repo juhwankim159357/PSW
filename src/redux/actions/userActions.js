@@ -11,13 +11,14 @@ import axios from "axios";
 export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
-    .post("/users/login")
+    .post("/users/login", userData)
     .then((res) => {
       console.log(res.data.token);
       setAuthorizationHeader(res.data.token);
+      // Get logged in user data
       //dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });
-      //history.push("/");
+      history.push("/user");
     })
     .catch((err) => {
       console.log(err);
@@ -37,7 +38,7 @@ export const logoutUser = () => (dispatch) => {
 export const getUserData = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .get("/user")
+    .get("/users")
     .then((res) => {
       dispatch({
         type: SET_USER,
