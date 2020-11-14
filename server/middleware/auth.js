@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
+  console.log("In auth");
   try {
     const token = req.header("x-auth-token");
     if (!token) {
@@ -17,7 +18,6 @@ const auth = async (req, res, next) => {
 
     // Return user to client
     req.user = verified.id;
-    console.log(req.user);
     next();
   } catch (err) {
     res.status(500).json({ error: err.message });

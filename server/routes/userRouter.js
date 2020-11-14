@@ -135,10 +135,14 @@ router.get("/:userName", (req, res) => {
 })
 
 router.get("/user", auth, (req, res) => {
-  let test = User.findOne({userName: req.user.userName})
+  let userData = {};
+  console.log("In get /user");
+  console.log(req.user);
+  User.findOne({ id: req.user})
   .then(userFound => {
     if(!userFound) {return res.status(404).end(); }
-    return res.status(200).json(userFound);
+    userData = userFound;
+    return res.status(200).json(userData);
   })
   .catch (err => next(err));
 })

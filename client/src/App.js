@@ -25,8 +25,6 @@ import signup from "./pages/signup";
 import User from "./pages/user";
 import jobs from "./pages/jobs";
 import addjob from "./pages/addJob";
-import UserContext from "./context/UserContext";
-import axios from "axios";
 
 const theme = createMuiTheme(themeFile);
 
