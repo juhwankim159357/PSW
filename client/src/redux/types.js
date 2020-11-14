@@ -13,3 +13,6 @@ export const STOP_LOADING_UI = 'STOP_LOADING_UI';
 export const RELOADING_DATA = 'RELOAD_DATA';
 export const DIALOG_OPEN = 'DIALOG_OPEN';
 export const DIALOG_CLOSED = 'DIALOG_CLOSED';
+
+// Data
+export const SET_JOBS = 'SET_JOBS';
