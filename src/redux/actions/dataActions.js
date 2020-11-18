@@ -24,24 +24,16 @@ export const getAllJobs = () => (dispatch) => {
     .catch((err) => console.error(err));
 };
 
-export const getUserData = (userHandle) => (dispatch) => {
+export const getUserData = (userName) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   return new Promise((resolve, reject) =>
     axios
-      .get(`/user/${userHandle}`)
+      .get(`/user`)
       .then((res) => {
         console.log(res);
-        dispatch({
-          type: SET_JOBS,
-          payload: res.data.jobs,
-        });
         resolve(res.data.user);
       })
       .catch((err) => {
-        dispatch({
-          type: SET_JOBS,
-          payload: null,
-        });
         reject(err);
       })
   );

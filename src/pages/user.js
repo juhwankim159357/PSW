@@ -8,6 +8,11 @@ import withStyles from "@material-ui/styles/withStyles";
 import Profile from "../components/Profile/Profile";
 import UploadSidebar from "../components/Profile/UploadSidebar";
 
+// Redux
+import {connect} from "react-redux";
+import {getUserData} from "../redux/actions/dataActions";
+
+
 const styles = (theme) => ({
   content: {
     flexGrow: 1,
@@ -27,11 +32,29 @@ const styles = (theme) => ({
 });
 
 class user extends Component {
+  constructor(){
+    super();
+    this.state = {
+      profile: null,
+      userIDParam: null,
+    };
+  }
+
+  componentDidMount() {
+    const userName = this.props.match.params.userName;
+
+    this.props.getUserData(userName)
+    .then((res)=>{
+      this.setState({profile: res});
+    })
+    .catch((err) => console.log(err));
+  }
   render() {
     const { classes } = this.props;
+
     return (
       <Grid
-        container 
+        container
         direction={"row"}
         spacing={2}
         className={clsx([classes.content], {
@@ -48,10 +71,12 @@ class user extends Component {
           </Grid>
         </Grid>
       </Grid>
-
-      
     );
   }
 }
 
-export default withStyles(styles)(user);
+const mapStateToProps = (state) => ({
+  data: state.data,
+});
+
+export default connect(mapStateToProps, {getUserData})(withStyles(styles)(user));

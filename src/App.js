@@ -98,7 +98,7 @@ class App extends Component {
                 <Route exact path="/signup" component={signup} />
                 <Route
                   exact
-                  path="/user"
+                  path="/user/:username"
                   render={(props) => (
                     <User {...props} isOpen={this.state.isOpen} />
                   )}

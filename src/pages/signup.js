@@ -41,13 +41,15 @@ class signup extends Component {
       confirmPassword: this.state.confirmPassword,
       userRole: this.state.userRole,
     };
+
+    axios.get("/users/test");
     
     // Post to database
     // Host backend on Heroku, change localhost link to Heroku link
-    axios.post("/users/signup", newUserData)
-    .then ( () => {this.props.history.push("/user");})
-    .catch( (err) => { this.props.history.push("/");});
-    console.log(newUserData);
+    // axios.post("/users/signup", newUserData)
+    // .then ( () => {this.props.history.push("/user");})
+    // .catch( (err) => { this.props.history.push("/");});
+    // console.log(newUserData);
   };
 
   //jUHWAN

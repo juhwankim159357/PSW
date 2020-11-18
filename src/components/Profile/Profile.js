@@ -1,12 +1,16 @@
 import React, { Component } from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
+import PropTypes from "prop-types";
 // MUI Stuff
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 // Icons
 import LocationOn from "@material-ui/icons/LocationOn";
 import imageUrl from "../../images/glonn.jpg";
+
+// Redux
+import { connect } from "react-redux";
 
 const styles = (theme) => ({
   ...theme.profileTheme,
@@ -30,7 +34,14 @@ const styles = (theme) => ({
 
 class Profile extends Component {
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      user: {
+        credentials: { email, userName },
+        loading,
+        authenticated,
+      },
+    } = this.props;
 
     return (
       <Grid container item className={classes.profileWrapper}>
@@ -63,4 +74,14 @@ class Profile extends Component {
   }
 }
 
-export default withStyles(styles)(Profile);
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+Profile.propTypes = {
+  user: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+};
+
+
+export default connect(mapStateToProps)(withStyles(styles)(Profile));
