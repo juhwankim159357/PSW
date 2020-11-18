@@ -138,7 +138,7 @@ router.get("/user", auth, (req, res) => {
   console.log("in user");
   console.log(userData);
   console.log(req.user);
-  Axios55555555555555
+  Axios
   .get(`/user/${req.user.userName}`)
   .then((doc) => {
     if(doc.exists) {
