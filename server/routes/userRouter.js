@@ -135,9 +135,10 @@ router.get("/:userName", (req, res) => {
 
 router.get("/user", auth, (req, res) => {
   let userData = {};
+  console.log("in user");
   console.log(userData);
   console.log(req.user);
-  Axios
+  Axios55555555555555
   .get(`/user/${req.user.userName}`)
   .then((doc) => {
     if(doc.exists) {

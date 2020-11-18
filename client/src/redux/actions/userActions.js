@@ -19,9 +19,9 @@ export const loginUser = (userData, history) => (dispatch) => {
       console.log(res.data.token);
       setAuthorizationHeader(res.data.token);
       // Get logged in user data
-      //dispatch(getUserData());
+      dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });
-      history.push("/user");
+      history.push("/");
     })
     .catch((err) => {
       console.log(err);
@@ -34,6 +34,7 @@ export const loginUser = (userData, history) => (dispatch) => {
 
 export const getUserData = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
+  console.log("In getUserData");
   axios
     .get("/users/user")
     .then((res) => {
