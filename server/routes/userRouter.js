@@ -1,5 +1,6 @@
 // moving contents to index.js
 const router = require("express").Router();
+const { default: Axios } = require("axios");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -16,7 +17,6 @@ router.get("/test", (req, res) => {
 
 router.get("/testAuth", auth, async (req, res) => {
   res.send("~/users/auth middleware works!");
-  console.log(req.user);
 });
 
 router.get("/", (req, res) => {
@@ -91,7 +91,7 @@ router.post("/login", async (req, res) => {
 
     // Stores unique _id from found user, lets us know which user has logged in
     // If we need a logged in used, we pass the token.
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id, userName: user.userName }, process.env.JWT_SECRET);
     res.json({
       token,
       user: {
@@ -135,15 +135,22 @@ router.get("/:userName", (req, res) => {
 
 router.get("/user", auth, (req, res) => {
   let userData = {};
-  console.log("In get /user");
+  console.log(userData);
   console.log(req.user);
-  User.findOne({ id: req.user})
-  .then(userFound => {
-    if(!userFound) {return res.status(404).end(); }
-    userData = userFound;
-    return res.status(200).json(userData);
+  Axios
+  .get(`/user/${req.user.userName}`)
+  .then((doc) => {
+    if(doc.exists) {
+      userData.credentials = doc.data();
+    }
+    return res.json(userData);
   })
-  .catch (err => next(err));
+  .catch((err) => {
+    console.error(err);
+    return res.status(500).json({error: err.code});
+  });
 })
+
+
 
 module.exports = router;
