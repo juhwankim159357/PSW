@@ -40,18 +40,19 @@ class user extends Component {
     };
   }
 
-  componentDidMount() {
-    const userName = this.props.match.params.userName;
-
-    this.props.getUserData(userName)
-    .then((res)=>{
-      this.setState({profile: res});
-    })
-    .catch((err) => console.log(err));
-  }
+  // componentDidMount() {
+  //   const userName = this.props.match.params.userName;
+  //
+  //   t..his.props.getUserData(userName)
+  //   .then((res)=>{
+  //     this.setState({profile: res});
+  //   })
+  //   .catch((err) => console.log(err));
+  // }
+  
   render() {
     const { classes } = this.props;
-
+    //console.log(this.props.user);
     return (
       <Grid
         container
@@ -76,7 +77,7 @@ class user extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  data: state.data,
+  user: state.user,
 });
 
-export default connect(mapStateToProps, {getUserData})(withStyles(styles)(user));
+export default connect(mapStateToProps)(withStyles(styles)(user));

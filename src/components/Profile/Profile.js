@@ -34,15 +34,7 @@ const styles = (theme) => ({
 
 class Profile extends Component {
   render() {
-    const {
-      classes,
-      user: {
-        credentials: { email, userName },
-        loading,
-        authenticated,
-      },
-    } = this.props;
-
+    const { classes } = this.props;
     return (
       <Grid container item className={classes.profileWrapper}>
         <Grid container item className={classes.profileHeader}>
@@ -58,7 +50,7 @@ class Profile extends Component {
             </Grid>
             <Grid item>
               <Grid item>
-                <Typography variant="h4">Chris Young-Hong</Typography>
+                <Typography variant="h4">{this.props.user.userName}</Typography>
               </Grid>
               <Grid container item flex-direction="column" alignItem="center">
                 <LocationOn />
@@ -82,6 +74,5 @@ Profile.propTypes = {
   user: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 };
-
 
 export default connect(mapStateToProps)(withStyles(styles)(Profile));
