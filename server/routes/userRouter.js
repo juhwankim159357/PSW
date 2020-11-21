@@ -144,6 +144,7 @@ router.get("/user", auth, (req, res) => {
     if(doc.exists) {
       userData.credentials = doc.data();
     }
+    console.log(userData);
     return res.json(userData);
   })
   .catch((err) => {

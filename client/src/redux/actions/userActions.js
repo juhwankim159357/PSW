@@ -16,12 +16,13 @@ export const loginUser = (userData, history) => (dispatch) => {
   axios
     .post("/users/login", userData)
     .then((res) => {
-      console.log(res.data.token);
       setAuthorizationHeader(res.data.token);
+      //console.log(res.data);
       // Get logged in user data
-      dispatch(getUserData());
+      //dispatch(getUserData());
+      dispatch({type: SET_USER, payload: res.data.user});
       dispatch({ type: CLEAR_ERRORS });
-      history.push("/");
+      history.push(`/user`);
     })
     .catch((err) => {
       console.log(err);
