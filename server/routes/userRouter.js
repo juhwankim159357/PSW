@@ -21,12 +21,12 @@ router.get("/testAuth", auth, async (req, res) => {
 
 router.get("/", (req, res) => {
   User.find({}, (err, users) => {
-    if(err) {
+    if (err) {
       res.send("Something went wrong.");
       next();
     }
     res.json(users);
-  })
+  });
 });
 
 router.post("/signup", async (req, res) => {
@@ -91,7 +91,10 @@ router.post("/login", async (req, res) => {
 
     // Stores unique _id from found user, lets us know which user has logged in
     // If we need a logged in used, we pass the token.
-    const token = jwt.sign({ id: user._id, userName: user.userName }, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { id: user._id, userName: user.userName },
+      process.env.JWT_SECRET
+    );
     res.json({
       token,
       user: {
@@ -125,34 +128,59 @@ router.post("/tokenIsValid", async (req, res) => {
 });
 
 router.get("/:userName", (req, res) => {
-  User.findOne({ userName: req.params.userName})
-  .then(userFound => {
-    if(!userFound) { return res.status(404).end(); }
-    return res.status(200).json(userFound);
-  })
-  .catch (err => next(err));
-})
+  User.findOne({ userName: req.params.userName })
+    .then((userFound) => {
+      if (!userFound) {
+        return res.status(404).end();
+      }
+      return res.status(200).json(userFound);
+    })
+    .catch((err) => next(err));
+});
 
 router.get("/user", auth, (req, res) => {
   let userData = {};
   console.log("in user");
   console.log(userData);
   console.log(req.user);
-  Axios
-  .get(`/user/${req.user.userName}`)
-  .then((doc) => {
-    if(doc.exists) {
-      userData.credentials = doc.data();
+  Axios.get(`/user/${req.user.userName}`)
+    .then((doc) => {
+      if (doc.exists) {
+        userData.credentials = doc.data();
+      }
+      console.log(userData);
+      return res.json(userData);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+});
+
+router.post("/user/:id", (req, res) => {
+  console.log("Updating user.");
+  const id = req.params.id;
+  //let editData = {};
+  User.findById(id, (err, user) => {
+    if (!user) {
+      res.status(404).send("User not found.");
+    } else {
+      console.log("User: ", user);
+      console.log("Req.body: ", req.body.userRole);
+
+      user.email = req.body.email;
+      user.userRole = req.body.userRole;
+      user.userName = req.body.userName;
+
+      //console.log("User after: ", user);
+      user
+        .save()
+        .then((user) => {
+          res.json(user);
+        })
+        .catch((err) => res.status(500).send(err.message));
     }
-    console.log(userData);
-    return res.json(userData);
-  })
-  .catch((err) => {
-    console.error(err);
-    return res.status(500).json({error: err.code});
   });
-})
-
-
+});
 
 module.exports = router;
