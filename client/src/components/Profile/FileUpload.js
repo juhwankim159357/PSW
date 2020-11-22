@@ -21,7 +21,7 @@ class FileUpload extends Component {
       },
     };
     axios
-      .post("http://localhost:3001/api/users/upload", formData, config)
+      .post("/users/upload", formData, config)
       .then((res) => {
         alert("The file is successfully uploaded");
       })
