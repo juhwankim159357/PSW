@@ -12,7 +12,6 @@ class FileUpload extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let token = window.localStorage.getItem('x-auth-token');
-    console.log(token);
     const formData = new FormData();
     formData.append("myfile", this.state.file);
     const config = {
