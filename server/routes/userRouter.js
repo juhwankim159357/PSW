@@ -203,9 +203,10 @@ router.post("/user/:id", (req, res) => {
 });
 
 router.post("/upload", auth, upload.single("myFile"), (req, res) => {
-  console.log("Request ---", req.body);
-  console.log("Request user ---" , req.user);
-  console.log("Request file ---", req.file);
+  // TODO CLEANUP
+  // console.log("Request ---", req.body);
+  // console.log("Request user ---" , req.user);
+  // console.log("Request file ---", req.file);
 
   const file = new File({
     meta_data: req.file,
