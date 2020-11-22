@@ -73,6 +73,23 @@ export const signupUser = (newUserData, history) => (dispatch) => {
     });
 };
 
+export const uploadResume = (formData, config) => (dispatch) => {
+  axios
+  .post("/users/upload", formData, config)
+  .then((res) => {
+    alert("The file is successfully uploaded");
+    dispatch({type: CLEAR_ERRORS});
+  })
+  .catch((err) => {
+    console.log(err);
+    dispatch({
+      type: SET_ERRORS,
+      payload: err.response,
+    });
+  });
+
+}
+
 const setAuthorizationHeader = (token) => {
   const XAuthToken = token;
   localStorage.setItem("x-auth-token", XAuthToken);

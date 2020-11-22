@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
+import PropTypes from "prop-types";
+
+import {connect} from "react-redux";
+import {uploadResume} from "../../redux/actions/userActions";
 
 class FileUpload extends Component {
   constructor(props) {
@@ -20,14 +24,7 @@ class FileUpload extends Component {
         "content-type": "multipart/form-data",
       },
     };
-    axios
-      .post("/users/upload", formData, config)
-      .then((res) => {
-        alert("The file is successfully uploaded");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.props.uploadResume(formData, config);
   };
 
   handleChange = (event) => {
@@ -54,4 +51,13 @@ class FileUpload extends Component {
   }
 }
 
-export default FileUpload;
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI,
+})
+
+const mapActionsToProps = {
+  uploadResume
+}
+
+export default connect(mapStateToProps,mapActionsToProps)(FileUpload);
