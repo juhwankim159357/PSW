@@ -14,7 +14,7 @@ router.get("/test", (req, res) => {
   res.send("job router working");
 });
 
-router.get("/jobs", async (req, res) => {
+router.get("/", async (req, res) => {
   // TODO GET ALL JOB POSTINGS
   // POST IN LIST
   try {
@@ -27,13 +27,14 @@ router.get("/jobs", async (req, res) => {
 });
 
 router.get("/job/:id", (req, res) => {
-  JobPosting.findById(req.params.id).then((jobFound) => {
-    if(!jobFound) {
-      return res.status(404).end();
-    }
-    return res.status(200).json(jobFound);
-  })
-  .catch((err) => next(err));
+  JobPosting.findById(req.params.id)
+    .then((jobPost) => {
+      if (!jobPost) {
+        return res.status(404).send("Job post not found.");
+      }
+      return res.status(200).json(jobFound);
+    })
+    .catch((err) => next(err));
 });
 
 router.post("/post-job", async (req, res) => {
@@ -72,33 +73,30 @@ router.post("/post-job", async (req, res) => {
   }
 });
 
-router.post("/job/update/:id", (req,res) => {
+router.post("/job/update/:id", (req, res) => {
   console.log("Updating job.");
   const id = req.params.id;
 
   JobPosting.findById(id, (err, jobPost) => {
-    if(!jobPost) {
+    if (!jobPost) {
       res.status(404).send("Job posting not found.");
     } else {
       console.log("Job post: ---", jobPost);
       console.log("Req.body: ---", req.body);
 
-      //jobPost = req.body;
-     // let updateJobPost = new JobPosting({
-        jobPost.positionTitle = req.body.positionTitle,
-        jobPost.companyName = req.body.companyName,
-        jobPost.contractType = req.body.contractType,
-        jobPost.description = req.body.description,
-        jobPost.duties = req.body.duties,
-        jobPost.requirements = req.body.requirements
-     //});
+      jobPost.positionTitle = req.body.positionTitle;
+      jobPost.companyName = req.body.companyName;
+      jobPost.contractType = req.body.contractType;
+      jobPost.description = req.body.description;
+      jobPost.duties = req.body.duties;
+      jobPost.requirements = req.body.requirements;
 
       jobPost
-      .save()
-      .then((jobPost) => {
-        res.json(jobPost);
-      })
-      .catch((err) => res.status(500).send(err.message));
+        .save()
+        .then((jobPost) => {
+          res.json(jobPost).send("Job posting updated successfully!");
+        })
+        .catch((err) => res.status(500).send(err.message));
     }
   });
 });

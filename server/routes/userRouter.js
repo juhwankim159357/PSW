@@ -184,18 +184,17 @@ router.post("/user/update/:id", (req, res) => {
     if (!user) {
       res.status(404).send("User not found.");
     } else {
-      console.log("User: ---", user);
-      console.log("Req.body.userRole: ---", req.body.userRole);
+      // console.log("User: ---", user);
+      // console.log("Req.body", req.body);
 
       user.email = req.body.email;
       user.userRole = req.body.userRole;
       user.userName = req.body.userName;
 
-      //console.log("User after: ", user);
       user
         .save()
         .then((user) => {
-          res.json(user);
+          res.json(user).send("User profile updated successfully!");
         })
         .catch((err) => res.status(500).send(err.message));
     }
