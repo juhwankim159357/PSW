@@ -39,20 +39,9 @@ class user extends Component {
       userIDParam: null,
     };
   }
-
-  // componentDidMount() {
-  //   const userName = this.props.match.params.userName;
-  //
-  //   t..his.props.getUserData(userName)
-  //   .then((res)=>{
-  //     this.setState({profile: res});
-  //   })
-  //   .catch((err) => console.log(err));
-  // }
   
   render() {
     const { classes } = this.props;
-    //console.log(this.props.user);
     return (
       <Grid
         container
@@ -66,9 +55,6 @@ class user extends Component {
         <Grid container spacing={2} className={classes.userWrapper}>
           <Grid item md={8}>
             Review Resume
-          </Grid>
-          <Grid item md={4}>
-            <UploadSidebar />
           </Grid>
         </Grid>
       </Grid>
