@@ -201,6 +201,8 @@ router.post("/user/update/:id", (req, res) => {
   });
 });
 
+// TODO Update specifically for score.
+
 router.post("/upload", auth, upload.single("myFile"), (req, res) => {
   // TODO CLEANUP
   // console.log("Request ---", req.body);
