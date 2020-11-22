@@ -3,20 +3,57 @@ const router = require("express").Router();
 const { default: Axios } = require("axios");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: "./public/resumes",
+  filename: function (req, file, cb) {
+    cb(null, "resume-" + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { filesize: 1000000 },
+});
 
 // Middleware
 const auth = require("../middleware/auth");
 
 // Routers
-const User = require("../models/userModel");
 const { route } = require("./jobRouter");
+
+// Models
+const User = require("../models/userModel");
+const File = require("../models/fileModel");
 
 router.get("/test", (req, res) => {
   res.send("~/users/test is working");
 });
 
 router.get("/testAuth", auth, async (req, res) => {
+  console.log(req.user);
   res.send("~/users/auth middleware works!");
+});
+
+router.post("/tokenIsValid", async (req, res) => {
+  try {
+    const token = req.header("x-auth-token");
+    console.log(token);
+    if (!token) return res.json(false);
+
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    if (!verified) return res.json(false);
+
+    // Return the verified user
+    const user = await User.findById(verified.id);
+    if (!user) return res.json(false);
+
+    return res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.get("/", (req, res) => {
@@ -108,25 +145,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/tokenIsValid", async (req, res) => {
-  try {
-    const token = req.header("x-auth-token");
-    console.log(token);
-    if (!token) return res.json(false);
-
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    if (!verified) return res.json(false);
-
-    // Return the verified user
-    const user = await User.findById(verified.id);
-    if (!user) return res.json(false);
-
-    return res.json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 router.get("/:userName", (req, res) => {
   User.findOne({ userName: req.params.userName })
     .then((userFound) => {
@@ -148,7 +166,7 @@ router.get("/user", auth, (req, res) => {
       if (doc.exists) {
         userData.credentials = doc.data();
       }
-      console.log(userData);
+      console.log(userData.credentials);
       return res.json(userData);
     })
     .catch((err) => {
@@ -157,6 +175,7 @@ router.get("/user", auth, (req, res) => {
     });
 });
 
+// Update
 router.post("/user/:id", (req, res) => {
   console.log("Updating user.");
   const id = req.params.id;
@@ -181,6 +200,23 @@ router.post("/user/:id", (req, res) => {
         .catch((err) => res.status(500).send(err.message));
     }
   });
+});
+
+router.post("/upload", auth, upload.single("myFile"), (req, res) => {
+  console.log("Request ---", req.body);
+  console.log("Request user ---" , req.user);
+  console.log("Request file ---", req.file);
+
+  const file = new File({
+    meta_data: req.file,
+    user_id: req.user,
+  });
+
+  let savedFile = file;
+
+  savedFile.save().then(() => {
+    res.send(savedFile);
+  })
 });
 
 module.exports = router;
