@@ -176,7 +176,7 @@ router.get("/user", auth, (req, res) => {
 });
 
 // Update
-router.post("/user/:id", (req, res) => {
+router.post("/user/update/:id", (req, res) => {
   console.log("Updating user.");
   const id = req.params.id;
   //let editData = {};
@@ -184,8 +184,8 @@ router.post("/user/:id", (req, res) => {
     if (!user) {
       res.status(404).send("User not found.");
     } else {
-      console.log("User: ", user);
-      console.log("Req.body: ", req.body.userRole);
+      console.log("User: ---", user);
+      console.log("Req.body.userRole: ---", req.body.userRole);
 
       user.email = req.body.email;
       user.userRole = req.body.userRole;
