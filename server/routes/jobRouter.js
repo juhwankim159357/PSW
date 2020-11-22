@@ -13,12 +13,13 @@ router.get("/test", (req, res) => {
   res.send("job router working");
 });
 
-router.get("/", auth, async (req, res) => {
+router.get("/jobs", async (req, res) => {
   // TODO GET ALL JOB POSTINGS
   // POST IN LIST
   try {
-    const jobList = await JobPosting.find();
-    res.send(jobList);
+    await JobPosting.find().then((jobs) => {
+      res.send(jobs);
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

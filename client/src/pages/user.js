@@ -7,6 +7,11 @@ import withStyles from "@material-ui/styles/withStyles";
 
 import Profile from "../components/Profile/Profile";
 import UploadSidebar from "../components/Profile/UploadSidebar";
+import FileUpload from "../components/Profile/FileUpload";
+
+// Redux
+import { connect } from "react-redux";
+import { getUserData } from "../redux/actions/dataActions";
 
 const styles = (theme) => ({
   content: {
@@ -27,11 +32,19 @@ const styles = (theme) => ({
 });
 
 class user extends Component {
+  constructor() {
+    super();
+    this.state = {
+      profile: null,
+      userIDParam: null,
+    };
+  }
+
   render() {
     const { classes } = this.props;
     return (
       <Grid
-        container 
+        container
         direction={"row"}
         spacing={2}
         className={clsx([classes.content], {
@@ -43,15 +56,17 @@ class user extends Component {
           <Grid item md={8}>
             Review Resume
           </Grid>
-          <Grid item md={4}>
-            <UploadSidebar />
+          <Grid item>
+            <FileUpload />
           </Grid>
         </Grid>
       </Grid>
-
-      
     );
   }
 }
 
-export default withStyles(styles)(user);
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(user));

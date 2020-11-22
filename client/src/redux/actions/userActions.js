@@ -9,36 +9,35 @@ import {
 import axios from "axios";
 
 export const loginUser = (userData, history) => (dispatch) => {
+  // This is the action type?
+  console.log("In loginUser");
   dispatch({ type: LOADING_UI });
+  console.log(userData);
   axios
     .post("/users/login", userData)
     .then((res) => {
-      console.log(res.data.token);
       setAuthorizationHeader(res.data.token);
+      //console.log(res.data);
       // Get logged in user data
       //dispatch(getUserData());
+      dispatch({type: SET_USER, payload: res.data.user});
       dispatch({ type: CLEAR_ERRORS });
-      history.push("/user");
+      history.push(`/user`);
     })
     .catch((err) => {
       console.log(err);
       dispatch({
         type: SET_ERRORS,
-        payload: err.response.data,
+        payload: err.response,
       });
     });
 };
 
-export const logoutUser = () => (dispatch) => {
-  localStorage.removeItem("x-auth-token");
-  delete axios.defaults.headers.common["Authorization"];
-  dispatch({ type: SET_UNAUTHENTICATED });
-};
-
 export const getUserData = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
+  console.log("In getUserData");
   axios
-    .get("/users")
+    .get("/users/user")
     .then((res) => {
       dispatch({
         type: SET_USER,
@@ -48,6 +47,12 @@ export const getUserData = () => (dispatch) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const logoutUser = () => (dispatch) => {
+  localStorage.removeItem("x-auth-token");
+  delete axios.defaults.headers.common["Authorization"];
+  dispatch({ type: SET_UNAUTHENTICATED });
 };
 
 export const signupUser = (newUserData, history) => (dispatch) => {
