@@ -179,7 +179,7 @@ router.get("/user", auth, (req, res) => {
 router.post("/user/update/:id", (req, res) => {
   console.log("Updating user.");
   const id = req.params.id;
-  //let editData = {};
+
   User.findById(id, (err, user) => {
     if (!user) {
       res.status(404).send("User not found.");
@@ -202,6 +202,21 @@ router.post("/user/update/:id", (req, res) => {
 });
 
 // TODO Update specifically for score.
+
+router.delete("/user/delete/:id", (req, res) => {
+  const id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if (!user) {
+      res.status(404).send("User not found.");
+    } else {
+      user
+        .delete()
+        .then(() => res.json("User deleted."))
+        .catch((err) => res.status(400).json("Error: " + err));
+    }
+  });
+});
 
 router.post("/upload", auth, upload.single("myFile"), (req, res) => {
   // TODO CLEANUP

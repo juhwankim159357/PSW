@@ -101,4 +101,19 @@ router.post("/job/update/:id", (req, res) => {
   });
 });
 
+router.delete("/job/delete/:id", (req, res) => {
+  const id = req.params.id;
+
+  JobPosting.findById(id, (err, jobPost) => {
+    if (!jobPost) {
+      res.status(404).send("Job post not found.");
+    } else {
+      jobPost
+        .delete()
+        .then(() => res.json("Job Post deleted."))
+        .catch((err) => res.status(400).json("Error: " + err));
+    }
+  });
+});
+
 module.exports = router;
