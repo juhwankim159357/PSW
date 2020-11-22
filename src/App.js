@@ -54,6 +54,7 @@ class App extends Component {
         token: "",
         user: {},
       },
+      userRole: "candidate",
       authenticated: false,
     };
   }

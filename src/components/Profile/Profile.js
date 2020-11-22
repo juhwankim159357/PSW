@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+
 // MUI Stuff
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -11,6 +12,8 @@ import imageUrl from "../../images/glonn.jpg";
 
 // Redux
 import { connect } from "react-redux";
+
+import ScoreCircle from "./ScoreCircle";
 
 const styles = (theme) => ({
   ...theme.profileTheme,
