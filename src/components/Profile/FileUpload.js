@@ -11,15 +11,18 @@ class FileUpload extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    let token = window.localStorage.getItem('x-auth-token');
+    console.log(token);
     const formData = new FormData();
     formData.append("myfile", this.state.file);
     const config = {
       headers: {
+        "x-auth-token": token,
         "content-type": "multipart/form-data",
       },
     };
     axios
-      .post("http://localhost:3001/upload", formData, config)
+      .post("http://localhost:3001/api/users/upload", formData, config)
       .then((res) => {
         alert("The file is successfully uploaded");
       })
@@ -35,13 +38,13 @@ class FileUpload extends Component {
   };
   render() {
     return (
-      <form onSubmit={this.onFormSubmit}>
+      <form onSubmit={this.handleSubmit}>
         <h1>File Upload</h1>
         <input
           type="file"
           className="custom-file-input"
           name="myImage"
-          onChange={this.onChange}
+          onChange={this.handleChange}
         />
         {console.log(this.state.file)}
         <button className="upload-button" type="submit">
