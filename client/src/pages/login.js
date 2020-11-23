@@ -13,6 +13,8 @@ import TextField from "@material-ui/core/TextField";
 import {connect} from 'react-redux';
 import {loginUser} from '../redux/actions/userActions';
 
+import ForgotPassword from '../components/Password/ForgotPassword';
+
 const styles = (theme) => ({
   ...theme.formTheme,
 });
@@ -107,6 +109,7 @@ class login extends Component {
               No account? Sign Up <Link to="/signup">here</Link>
             </small>
           </form>
+          <ForgotPassword />
         </Grid>
         <Grid item sm></Grid>
       </Grid>
