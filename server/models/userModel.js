@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
     userName: {type: String},
     userRole: {type: String},
     pswScore: {type: Number, default: 0},
+    resetPasswordToken: {type: String},
+    resetPasswordTokenExpiry: {thype: String}
 });
 
 // Use User to interact with User in database

@@ -5,6 +5,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const axios = require("axios");
 
 const storage = multer.diskStorage({
   destination: "./public/resumes",
@@ -27,6 +30,7 @@ const { route } = require("./jobRouter");
 // Models
 const User = require("../models/userModel");
 const File = require("../models/fileModel");
+const { doesNotMatch } = require("assert");
 
 router.get("/test", (req, res) => {
   res.send("~/users/test is working");
@@ -202,6 +206,60 @@ router.post("/user/update/:id", (req, res) => {
 });
 
 // TODO Update specifically for score.
+router.post("/forgot-password", (req, res) => {
+  if (req.body.email === "") {
+    res.status(400).send("Email required.");
+  }
+
+  User.findOne({
+    email: req.body.email,
+  }).then((user) => {
+    if (user === null) {
+      console.error("No user with that email exists.");
+      res.status(403).send("No user with that email exists in the database.");
+    } else {
+      const token = crypto.randomBytes(32).toString("hex");
+      user.update({
+        resetPasswordToken: token,
+        resetPasswordTokenExpiry: Date.now() + 3600000,
+      });
+
+      console.log("User ---: ", user);
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: `${process.env.EMAIL_ADDRESS}`,
+          pass: `${process.env.EMAIL_PASSWORD}`,
+        },
+      });
+
+      const mailOptions = {
+        from: `${process.env.EMAIL_ADDRESS}`,
+        to: `${user.email}`,
+        subject: "Password reset link",
+        text:
+          "You are receiving this because you (or someone else) have requested a password reset for your account.\n\n" +
+          "Please click on the following link, or paste this into your browser to reset your password within one hour of receiving it: \n\n" +
+          `https://psw-server.herokuapp.com/api/users/reset/${token}\n\n` +
+          "If you did not request this, please ignore this email and your password will remain unchanged.\n",
+      };
+
+      console.log("Sending mail");
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          //console.error("There was an error: ", err);
+          res.status(502).send("Bad gateway.");
+        } else {
+          //console.log("Info ---", info);
+          console.log("Mail sent");
+          res.status(200).json("Email sent.");
+        }
+      });
+    }
+  });
+});
 
 router.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;
@@ -233,7 +291,7 @@ router.post("/upload", auth, upload.single("myFile"), (req, res) => {
 
   savedFile.save().then(() => {
     res.send(savedFile);
-  })
+  });
 });
 
 module.exports = router;
