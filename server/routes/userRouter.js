@@ -33,6 +33,7 @@ const File = require("../models/fileModel");
 const { doesNotMatch } = require("assert");
 
 router.get("/test", (req, res) => {
+  console.log("Test");
   res.send("~/users/test is working");
 });
 
@@ -42,6 +43,7 @@ router.get("/testAuth", auth, async (req, res) => {
 });
 
 router.post("/tokenIsValid", async (req, res) => {
+  console.log("In /tokenIsValid");
   try {
     const token = req.header("x-auth-token");
     console.log(token);
@@ -205,8 +207,9 @@ router.post("/user/update/:id", (req, res) => {
   });
 });
 
-// TODO Update specifically for score.
 router.post("/forgot-password", (req, res) => {
+  console.log("In /forgot-password");
+
   if (req.body.email === "") {
     res.status(400).send("Email required.");
   }
@@ -219,12 +222,14 @@ router.post("/forgot-password", (req, res) => {
       res.status(403).send("No user with that email exists in the database.");
     } else {
       const token = crypto.randomBytes(32).toString("hex");
-      user.update({
-        resetPasswordToken: token,
-        resetPasswordTokenExpiry: Date.now() + 3600000,
-      });
 
-      console.log("User ---: ", user);
+      user.resetPasswordToken = token;
+      user.resetPasswordTokenExpiry = Date.now() + 3600000;
+
+      user.save();
+
+      console.log("User Token ---: ", user.resetPasswordToken);
+      console.log("User Token Exp ---: ", user.resetPasswordTokenExpiry);
 
       const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -257,6 +262,58 @@ router.post("/forgot-password", (req, res) => {
           res.status(200).json("Email sent.");
         }
       });
+    }
+  });
+});
+
+router.get("/reset-password/:token", (req, res) => {
+  console.log(req.params.token);
+  User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordTokenExpiry: {
+      $gt: Date.now(),
+    },
+  }).then((user) => {
+    if (user === null) {
+      console.log("Pasword reset link is invalid or has expired.");
+      res.json("Pasword reset link is invalid or has expired.");
+    } else {
+      res.status(200).send({
+        userName: user.userName,
+        message: "Link is good.",
+      });
+    }
+  });
+});
+
+router.post("/change-password", async (req, res) => {
+  const salt = await bcrypt.genSalt();
+  console.log("In change-password");
+  
+  User.findOne({
+    userName: req.body.userName,
+  }).then((user) => {
+    if (user) {
+      console.log("User exists.");
+      bcrypt
+        .hash(req.body.password, salt)
+        .then((hashedPassword) => {
+          user.password = hashedPassword;
+          user.resetPasswordToken = null;
+          user.resetPasswordTokenExpiry = null;
+          user.save();
+        })
+        .then(() => {
+          console.log("Password update");
+          res.status(200).send({ message: "Password updated." });
+        });
+    } else {
+      console.log(
+        "No user with this username exists in this database to update."
+      );
+      res
+        .status(404)
+        .json("No user with this username exists in this database to update.");
     }
   });
 });
