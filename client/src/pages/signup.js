@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 // MUI
 import Grid from "@material-ui/core/Grid";
@@ -8,8 +9,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import withStyle from "@material-ui/core/styles/withStyles";
 
-import axios from "axios";
-
+import {connect} from "react-redux";
+import {signupUser} from "../redux/actions/userActions";
 const styles = (theme) => ({
   ...theme.formTheme,
 });
@@ -42,7 +43,8 @@ class signup extends Component {
       userRole: this.state.userRole,
     };
 
-    axios.get("/users/test");
+    this.props.signupUser(newUserData, this.props.history);
+    //axios.get("/users/test");
     
     // Post to database
     // Host backend on Heroku, change localhost link to Heroku link
@@ -150,7 +152,21 @@ class signup extends Component {
   }
 }
 
+signup.propTypes = {
+  classes: PropTypes.object.isRequired,
+  signupUser: PropTypes.func.isRequired,
+  UI: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI,
+})
+
+const mapActionsToProps = {
+  signupUser
+}
 
 
-export default withStyle(styles)(signup);
+export default connect(mapStateToProps, mapActionsToProps)(withStyle(styles)(signup));
 

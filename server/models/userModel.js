@@ -6,6 +6,9 @@ const userSchema = new mongoose.Schema({
     password: {type: String, required: true, minLength: 5},
     userName: {type: String},
     userRole: {type: String},
+    pswScore: {type: Number, default: 0},
+    resetPasswordToken: {type: String},
+    resetPasswordTokenExpiry: {type: Date}
 });
 
 // Use User to interact with User in database

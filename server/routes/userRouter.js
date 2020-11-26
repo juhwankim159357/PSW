@@ -5,6 +5,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const axios = require("axios");
 
 const storage = multer.diskStorage({
   destination: "./public/resumes",
@@ -27,8 +30,10 @@ const { route } = require("./jobRouter");
 // Models
 const User = require("../models/userModel");
 const File = require("../models/fileModel");
+const { doesNotMatch } = require("assert");
 
 router.get("/test", (req, res) => {
+  console.log("Test");
   res.send("~/users/test is working");
 });
 
@@ -38,6 +43,7 @@ router.get("/testAuth", auth, async (req, res) => {
 });
 
 router.post("/tokenIsValid", async (req, res) => {
+  console.log("In /tokenIsValid");
   try {
     const token = req.header("x-auth-token");
     console.log(token);
@@ -123,6 +129,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "No user with this email." });
 
     const isMatch = await bcrypt.compare(password, user.password);
+    
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials." });
 
@@ -176,28 +183,153 @@ router.get("/user", auth, (req, res) => {
 });
 
 // Update
-router.post("/user/:id", (req, res) => {
+router.post("/user/update/:id", (req, res) => {
   console.log("Updating user.");
   const id = req.params.id;
-  //let editData = {};
+
   User.findById(id, (err, user) => {
     if (!user) {
       res.status(404).send("User not found.");
     } else {
-      console.log("User: ", user);
-      console.log("Req.body: ", req.body.userRole);
+      // console.log("User: ---", user);
+      // console.log("Req.body", req.body);
 
       user.email = req.body.email;
       user.userRole = req.body.userRole;
       user.userName = req.body.userName;
 
-      //console.log("User after: ", user);
       user
         .save()
         .then((user) => {
-          res.json(user);
+          res.json(user).send("User profile updated successfully!");
         })
         .catch((err) => res.status(500).send(err.message));
+    }
+  });
+});
+
+router.post("/forgot-password", (req, res) => {
+  console.log("In /forgot-password");
+
+  if (req.body.email === "") {
+    res.status(400).send("Email required.");
+  }
+
+  User.findOne({
+    email: req.body.email,
+  }).then((user) => {
+    if (user === null) {
+      console.error("No user with that email exists.");
+      res.status(403).send("No user with that email exists in the database.");
+    } else {
+      const token = crypto.randomBytes(32).toString("hex");
+
+      user.resetPasswordToken = token;
+      user.resetPasswordTokenExpiry = Date.now() + 3600000;
+
+      user.save();
+
+      console.log("User Token ---: ", user.resetPasswordToken);
+      console.log("User Token Exp ---: ", user.resetPasswordTokenExpiry);
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: `${process.env.EMAIL_ADDRESS}`,
+          pass: `${process.env.EMAIL_PASSWORD}`,
+        },
+      });
+
+      const mailOptions = {
+        from: `${process.env.EMAIL_ADDRESS}`,
+        to: `${user.email}`,
+        subject: "Password reset link",
+        text:
+          "You are receiving this because you (or someone else) have requested a password reset for your account.\n\n" +
+          "Please click on the following link, or paste this into your browser to reset your password within one hour of receiving it: \n\n" +
+          `https://psw-server.herokuapp.com/api/users/reset/${token}\n\n` +
+          "If you did not request this, please ignore this email and your password will remain unchanged.\n",
+      };
+
+      console.log("Sending mail");
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          //console.error("There was an error: ", err);
+          res.status(502).send("Bad gateway.");
+        } else {
+          //console.log("Info ---", info);
+          console.log("Mail sent");
+          res.status(200).json("Email sent.");
+        }
+      });
+    }
+  });
+});
+
+router.get("/reset-password/:token", (req, res) => {
+  console.log(req.params.token);
+  User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordTokenExpiry: {
+      $gt: Date.now(),
+    },
+  }).then((user) => {
+    if (user === null) {
+      console.log("Pasword reset link is invalid or has expired.");
+      res.json("Pasword reset link is invalid or has expired.");
+    } else {
+      res.status(200).send({
+        userName: user.userName,
+        message: "Link is good.",
+      });
+    }
+  });
+});
+
+router.post("/change-password", async (req, res) => {
+  const salt = await bcrypt.genSalt();
+  console.log("In change-password");
+  
+  User.findOne({
+    userName: req.body.userName,
+  }).then((user) => {
+    if (user) {
+      console.log("User exists.");
+      bcrypt
+        .hash(req.body.password, salt)
+        .then((hashedPassword) => {
+          user.password = hashedPassword;
+          user.resetPasswordToken = null;
+          user.resetPasswordTokenExpiry = null;
+          user.save();
+        })
+        .then(() => {
+          console.log("Password update");
+          res.status(200).send({ message: "Password updated." });
+        });
+    } else {
+      console.log(
+        "No user with this username exists in this database to update."
+      );
+      res
+        .status(404)
+        .json("No user with this username exists in this database to update.");
+    }
+  });
+});
+
+router.delete("/user/delete/:id", (req, res) => {
+  const id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if (!user) {
+      res.status(404).send("User not found.");
+    } else {
+      user
+        .delete()
+        .then(() => res.json("User deleted."))
+        .catch((err) => res.status(400).json("Error: " + err));
     }
   });
 });
@@ -217,7 +349,7 @@ router.post("/upload", auth, upload.single("myFile"), (req, res) => {
 
   savedFile.save().then(() => {
     res.send(savedFile);
-  })
+  });
 });
 
 module.exports = router;
