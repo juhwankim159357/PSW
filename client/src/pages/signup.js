@@ -44,14 +44,6 @@ class signup extends Component {
     };
 
     this.props.signupUser(newUserData, this.props.history);
-    //axios.get("/users/test");
-    
-    // Post to database
-    // Host backend on Heroku, change localhost link to Heroku link
-    // axios.post("/users/signup", newUserData)
-    // .then ( () => {this.props.history.push("/user");})
-    // .catch( (err) => { this.props.history.push("/");});
-    // console.log(newUserData);
   };
 
   //jUHWAN
