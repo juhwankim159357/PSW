@@ -12,9 +12,11 @@ import axios from "axios";
 
 export const getAllJobs = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
+  console.log("before fetching")
   axios
-    .get("/jobs")
+    .get("jobs")
     .then((res) => {
+      console.log("fetching jobs")
       console.log(res.data);
       dispatch({
         type: SET_JOBS,
