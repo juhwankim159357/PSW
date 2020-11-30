@@ -1,8 +1,10 @@
-import { LOADING_DATA, SET_JOBS } from "../types";
+import jobs from "../../pages/jobs/jobs";
+import { LOADING_DATA, SET_JOBS, SET_JOB, DELETE_JOB } from "../types";
 
 const initialState = {
   loading: false,
   jobs: [],
+  job: {},
 };
 
 // eslint-disable-next-line
@@ -16,9 +18,16 @@ export default function (state = initialState, action) {
     case SET_JOBS:
       return {
         ...state,
-        jobs: action.payload,
         loading: false,
+        jobs: action.payload,
       };
+
+    case SET_JOB:
+      return {
+        ...state,
+        job: action.payload,
+      };
+
     default:
       return state;
   }

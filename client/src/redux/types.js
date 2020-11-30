@@ -2,6 +2,7 @@
 export const SET_AUTHENTICATED = 'SET_AUTHENTICATED';
 export const SET_UNAUTHENTICATED = 'SET_UNAUTHENTICATED';
 export const SET_USER = 'SET_USER';
+export const SET_EMPLOYER = 'SET_EMPLOYER';
 export const LOADING_USER = 'LOADING_USER';
 
 // UI Reducer Types
@@ -16,3 +17,5 @@ export const DIALOG_CLOSED = 'DIALOG_CLOSED';
 
 // Data
 export const SET_JOBS = 'SET_JOBS';
+export const SET_JOB = 'SET_JOB';
+export const DELETE_JOB = 'DELETE_JOB';

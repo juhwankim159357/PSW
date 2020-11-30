@@ -29,7 +29,6 @@ import Questions from "./pages/jobs/Questions";
 
 const theme = createMuiTheme(themeFile);
 
-
 const token = localStorage.XAuthToken;
 if (token) {
   const decodedToken = jwtDecode(token); //Gives token a field exp?
@@ -42,7 +41,6 @@ if (token) {
     store.dispatch(getUserData());
   }
 }
-
 
 // Three user roles, unauthenticated, candidate, employer
 class App extends Component {
