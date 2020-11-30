@@ -18,11 +18,16 @@ const styles = (theme) => ({
 });
 
 export class addJob extends Component {
+  constructor() {
+    super();
+    if (!localStorage.getItem("x-auth-token")) window.location = "/login";
+
+  }
   render() {
     return (
       <Grid container>
         <Grid item sm />
-          <JobForm />
+          <JobForm history = {this.props.history}/>
         <Grid item sm />
       </Grid>
     );

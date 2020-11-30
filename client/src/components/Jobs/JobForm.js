@@ -5,6 +5,7 @@ import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 // import Radio from "@material-ui/core/Radio";
 // import RadioGroup from "@material-ui/core/RadioGroup";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -45,11 +46,12 @@ export class JobForm extends Component {
     };
 
     axios
-      .post("/jobs/addjob", newJobPosting)
+      .post("/jobs/post-job", newJobPosting)
       .then(() => {
-        this.props.history.push("/job/details");
+        this.props.history.push("/");
       })
       .catch((err) => {
+        console.log(err);
         this.props.history.push("/");
       });
   };
@@ -76,7 +78,7 @@ export class JobForm extends Component {
             fullWidth
             className={classes.textField}
             value={this.state.positionTitle}
-            onCHange={this.handleChange}
+            onChange={this.handleChange}
           />
           <TextField
             id="companyName"
@@ -86,7 +88,7 @@ export class JobForm extends Component {
             fullWidth
             className={classes.textField}
             value={this.state.companyName}
-            onCHange={this.handleChange}
+            onChange={this.handleChange}
           />
           <TextField
             id="contractType"
@@ -96,7 +98,7 @@ export class JobForm extends Component {
             fullWidth
             className={classes.textField}
             value={this.state.contractType}
-            onCHange={this.handleChange}
+            onChange={this.handleChange}
           />
           <TextField
             id="description"
@@ -106,7 +108,7 @@ export class JobForm extends Component {
             fullWidth
             className={classes.textField}
             value={this.state.description}
-            onCHange={this.handleChange}
+            onChange={this.handleChange}
           />
           <TextField
             id="duties"
@@ -116,8 +118,16 @@ export class JobForm extends Component {
             fullWidth
             className={classes.textField}
             value={this.state.duties}
-            onCHange={this.handleChange}
+            onChange={this.handleChange}
           />
+           <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              Submit
+            </Button>
         </form>
       </Grid>
     );

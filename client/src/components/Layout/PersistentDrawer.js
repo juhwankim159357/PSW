@@ -89,7 +89,7 @@ class PersistentDrawer extends Component {
       },
       {
         text: "Apply Position",
-        linkTo: "login",
+        linkTo: "/login",
       },
       {
         text: "Review Resume",
@@ -98,6 +98,18 @@ class PersistentDrawer extends Component {
       {
         text: "Review Application Status",
         linkTo: "",
+      },
+      {
+        text: "test add jobs",
+        linkTo: "/jobs/addJob",
+      },
+      {
+        text: "test jobs",
+        linkTo: "/jobs",
+      },
+      {
+        text: "test Questions",
+        linkTo: "/Questions",
       },
     ];
 

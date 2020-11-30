@@ -25,9 +25,9 @@ import signup from "./pages/signup";
 import User from "./pages/user";
 import jobs from "./pages/jobs/jobs";
 import addjob from "./pages/jobs/addJob";
+import Questions from "./pages/jobs/Questions";
 
 const theme = createMuiTheme(themeFile);
-
 
 const token = localStorage.XAuthToken;
 if (token) {
@@ -41,7 +41,6 @@ if (token) {
     store.dispatch(getUserData());
   }
 }
-
 
 // Three user roles, unauthenticated, candidate, employer
 class App extends Component {
@@ -106,6 +105,7 @@ class App extends Component {
                 />
                 <Route exact path="/jobs" component={jobs} />
                 <Route exact path="/jobs/addJob" component={addjob} />
+                <Route exact path="/Questions" component={Questions} />
               </Switch>
             </div>
           </Router>

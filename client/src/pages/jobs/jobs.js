@@ -20,7 +20,6 @@ const styles = {
 
 class jobs extends Component {
   componentDidMount() {
-    console.log("jobs did mount");
     this.props.getAllJobs();
   }
 
@@ -32,45 +31,26 @@ class jobs extends Component {
     const { jobs, loading } = this.props.data;
     const { classes } = this.props;
 
-    //console.log(jobs);
 
-    //TODO Map job list array
-    // const jobList = [
-    //     {
-    //         title: "PSW 1",
-    //         jobDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.Fusce quis augue nec eros convallis sagittis. Aenean tempor quam et tortor accumsan dictum.",
-    //         path: "/jobDetails",
-    //     },
-    //     {
-    //         title: "PSW 2",
-    //         jobDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.Fusce quis augue nec eros convallis sagittis. Aenean tempor quam et tortor accumsan dictum.",
-    //     },
-    //     {
-    //         title: "PSW 3",
-    //         jobDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.Fusce quis augue nec eros convallis sagittis. Aenean tempor quam et tortor accumsan dictum.",
-    //     },
-    //     {
-    //         title: "PSW 5",
-    //         jobDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.Fusce quis augue nec eros convallis sagittis. Aenean tempor quam et tortor accumsan dictum.",
-    //     },
-    // ]
-
+    const jobList = this.props.data.jobs;
     return (
-        <Card className={classes.card}>
-          <CardMedia title="Profile Image" className={classes.image} />
-          <Link to="jobs/details">
+      <>
+      { jobList.map(item => 
+        <Card className={classes.card} key = {item._id}>
+          <Link to={`jobs/details/${item._id}`}>
             <CardContent className={classes.content}>
               <Typography variant="h5" component={Link}>
-                Position Title
+                {item.positionTitle}
               </Typography>
               <Typography variant="body1" color="textPrimary">
-                Job Desc: Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Fusce quis augue nec eros convallis sagittis. Aenean
-                tempor quam et tortor accumsan dictum.
+               {item.description}
               </Typography>
             </CardContent>
           </Link>
         </Card>
+      )}
+      </> 
+  
     );
   }
 }

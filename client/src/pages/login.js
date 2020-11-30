@@ -28,7 +28,7 @@ class login extends Component {
       errors: {},
     };
   }
-
+  
   static getDerivedStateFromProps(nextProps) {
     if(nextProps.UI.errors){
       return {errors: nextProps.UI.errors};
@@ -55,6 +55,7 @@ class login extends Component {
     const { classes, UI:{loading} } = this.props;
     const { errors } = this.state;
 
+    
     return (
       <Grid container className={classes.form}>
         <Grid item sm></Grid>
