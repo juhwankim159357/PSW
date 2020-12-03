@@ -11,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 
 // Redux
 import {connect} from 'react-redux';
-import {loginUser} from '../redux/actions/userActions';
+import {loginUser} from '../redux/actions/index';
 
 import ForgotPassword from '../components/Password/ForgotPassword';
 

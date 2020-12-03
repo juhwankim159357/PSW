@@ -3,6 +3,8 @@ import {
   CLEAR_ERRORS,
   LOADING_UI,
   STOP_LOADING_UI,
+  DRAWER_OPEN,
+  DRAWER_CLOSE,
   DIALOG_OPEN,
   DIALOG_CLOSED,
 } from "../types";
@@ -11,6 +13,7 @@ const initialState = {
   loading: false,
   dialog: false,
   errors: null,
+  drawerOpen: false,
 };
 
 // eslint-disable-next-line
@@ -37,6 +40,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
+      };
+    case DRAWER_OPEN:
+      return {
+        ...state,
+        drawerOpen: true,
+      };
+    case DRAWER_CLOSE:
+      return {
+        ...state,
+        drawerOpen: false,
       };
     case DIALOG_OPEN:
       return {
