@@ -42,7 +42,7 @@ class FileUpload extends Component {
           name="myImage"
           onChange={this.handleChange}
         />
-        {console.log(this.state.file)}
+       {/* {console.log(this.state.file)} */}
         <button className="upload-button" type="submit">
           Upload to DB
         </button>
