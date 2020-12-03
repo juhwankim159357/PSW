@@ -14,6 +14,7 @@ import imageUrl from "../../images/glonn.jpg";
 import { connect } from "react-redux";
 
 import ScoreCircle from "./ScoreCircle";
+import { Autorenew } from "@material-ui/icons";
 
 const styles = (theme) => ({
   ...theme.profileTheme,
@@ -32,38 +33,34 @@ const styles = (theme) => ({
       },
     },
   },
-  resumeStuff: {},
+  "profile-image": {
+    width: 100,
+    height: 100,
+  }
 });
 
 class Profile extends Component {
   render() {
-    const { classes } = this.props;
+    const { user, classes } = this.props;
     return (
-      <Grid container item className={classes.profileWrapper}>
-        <Grid container item className={classes.profileHeader}>
-          <Grid
-            container
-            item
-            className={classes.profile}
-            flex-direction="column"
-            alignItems="center"
-          >
-            <Grid item className="image-wrapper">
-              <img src={imageUrl} alt="profile" className="profile-image" />
-            </Grid>
-            <Grid item>
-              <Grid item>
-                <Typography variant="h4">{this.props.user.userName}</Typography>
-              </Grid>
-              <Grid container item flex-direction="column" alignItem="center">
-                <LocationOn />
-                <Typography display="inline" align="center">
-                  Toronto, Ontario
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
+      <Grid item xs={12} className={classes.profileWrapper}>
+        <Grid item xs={2} className="image-wrapper">
+          <img src={imageUrl} alt="profile" className="profile-image" backgroundSize='contain' backgroundRepeat='no-repeat'/>
         </Grid>
+
+        <Grid item>
+          <Typography variant="h4">{user.credentials.userName}</Typography>
+        </Grid>
+
+        <Grid item>
+          <LocationOn />
+          <Typography display="inline">Toronto, Ontario</Typography>
+        </Grid>
+
+        <Grid item className="score">
+          <ScoreCircle value="86" />
+        </Grid>
+
       </Grid>
     );
   }
