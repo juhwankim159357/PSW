@@ -36,12 +36,12 @@ class ScoreCircle extends Component {
     }
 } 
 
-const mapStateToProps = (state) => ({
-    user: state.user,
-  });
+// const mapStateToProps = (state) => ({
+//     user: state.user,
+//   });
   
-  ScoreCircle.propTypes = {
-      value: PropTypes.number.isRequired
-  };
+//   ScoreCircle.propTypes = {
+//       value: PropTypes.number.isRequired
+//   };
 
-export default connect(ScoreCircle);
+export default ScoreCircle;

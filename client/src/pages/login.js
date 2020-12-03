@@ -11,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 
 // Redux
 import {connect} from 'react-redux';
-import {loginUser} from '../redux/actions/userActions';
+import {loginUser} from '../redux/actions/index';
 
 import ForgotPassword from '../components/Password/ForgotPassword';
 
@@ -28,7 +28,7 @@ class login extends Component {
       errors: {},
     };
   }
-
+  
   static getDerivedStateFromProps(nextProps) {
     if(nextProps.UI.errors){
       return {errors: nextProps.UI.errors};
@@ -55,6 +55,7 @@ class login extends Component {
     const { classes, UI:{loading} } = this.props;
     const { errors } = this.state;
 
+    
     return (
       <Grid container className={classes.form}>
         <Grid item sm></Grid>

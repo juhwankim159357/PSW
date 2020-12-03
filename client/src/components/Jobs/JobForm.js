@@ -11,7 +11,6 @@ import Button from "@material-ui/core/Button";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 import withStyle from "@material-ui/core/styles/withStyles";
 
-
 const styles = (theme) => ({
   ...theme.formTheme,
 });
@@ -62,8 +61,6 @@ export class JobForm extends Component {
       [event.target.name]: event.target.value,
     });
   };
-
-  
 
   render() {
     const { classes } = this.props;

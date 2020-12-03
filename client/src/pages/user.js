@@ -41,14 +41,12 @@ class user extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { UI, classes } = this.props;
     return (
-      <Grid
-        container
-        direction={"row"}
+      <Grid container
         spacing={2}
         className={clsx([classes.content], {
-          [classes.contentShift]: this.props.isOpen,
+          [classes.contentShift]: UI.drawerOpen,
         })}
       >
         <Profile />
@@ -67,6 +65,7 @@ class user extends Component {
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  UI: state.UI,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(user));
