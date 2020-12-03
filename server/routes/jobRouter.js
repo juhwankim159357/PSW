@@ -35,9 +35,9 @@ router.get("/job/:id", (req, res) => {
       if (!jobPost) {
         return res.status(404).send("Job post not found.");
       }
-      return res.status(200).json(jobFound);
+      return res.status(200).json(jobPost);
     })
-    .catch((err) => next(err));
+    .catch((err) => res.status(500).json(err));
 });
 
 router.post("/post-job", auth, async (req, res) => {
@@ -101,9 +101,12 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
     })
 
     const savedApp = await newApplication.save();
+
+    // 
     jobpost.applicants.push(savedApp.applicant)
     jobpost.save();
 
+    // User Model
     applicant.applications.push(savedApp.jobPosting);
     applicant.save();
 
