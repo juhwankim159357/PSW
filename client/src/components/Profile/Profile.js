@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
+import Avatar from "@material-ui/core/Avatar";
 
 // Icons
 import LocationOn from "@material-ui/icons/LocationOn";
@@ -14,7 +15,6 @@ import imageUrl from "../../images/glonn.jpg";
 import { connect } from "react-redux";
 
 import ScoreCircle from "./ScoreCircle";
-import { Autorenew } from "@material-ui/icons";
 
 const styles = (theme) => ({
   ...theme.profileTheme,
@@ -33,34 +33,42 @@ const styles = (theme) => ({
       },
     },
   },
-  "profile-image": {
-    width: 100,
-    height: 100,
-  }
 });
 
 class Profile extends Component {
   render() {
     const { user, classes } = this.props;
     return (
-      <Grid item xs={12} className={classes.profileWrapper}>
-        <Grid item xs={2} className="image-wrapper">
-          <img src={imageUrl} alt="profile" className="profile-image" backgroundSize='contain' backgroundRepeat='no-repeat'/>
+      <Grid
+        container
+        item
+        spacing={2}
+        xs={12}
+        className={classes.profileWrapper}
+        alignItems="center"
+      >
+        <Grid item>
+          <Avatar
+            src={imageUrl}
+            alt={user.credentials.userName}
+            className={classes.profileImg}
+          />
         </Grid>
 
-        <Grid item>
-          <Typography variant="h4">{user.credentials.userName}</Typography>
-        </Grid>
+        <Grid item flex-direction="column" className={classes.profileShort}>
+          <Grid item>
+            <Typography variant="h4">{user.credentials.userName}</Typography>
+          </Grid>
 
-        <Grid item>
-          <LocationOn />
-          <Typography display="inline">Toronto, Ontario</Typography>
+          <Grid item>
+            <LocationOn />
+            <Typography display="inline">Toronto, Ontario</Typography>
+          </Grid>
         </Grid>
 
         <Grid item className="score">
           <ScoreCircle value="86" />
         </Grid>
-
       </Grid>
     );
   }
