@@ -8,8 +8,10 @@ const jobPostingSchema = new mongoose.Schema({
     description: {type: String, required: true},
     duties: {type: Array, "default": [], required: true},
     requirements: {type: Array, "default": [],required: true},
+    applicants: {type: Array, "default": []},
+    //posterId: {type: String, required: true},
 });
 
 // Use User to interact with User in database
-module.exports = User = mongoose.model("jobPosting", jobPostingSchema);
+module.exports = JobPosting = mongoose.model("jobPosting", jobPostingSchema);
 
