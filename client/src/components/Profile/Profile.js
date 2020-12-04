@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
+import Avatar from "@material-ui/core/Avatar";
 
 // Icons
 import LocationOn from "@material-ui/icons/LocationOn";
@@ -32,37 +33,33 @@ const styles = (theme) => ({
       },
     },
   },
-  resumeStuff: {},
 });
 
 class Profile extends Component {
   render() {
-    const { classes } = this.props;
+    const { user, classes } = this.props;
     return (
-      <Grid container item className={classes.profileWrapper}>
-        <Grid container item className={classes.profileHeader}>
-          <Grid
-            container
-            item
-            className={classes.profile}
-            flex-direction="column"
-            alignItems="center"
-          >
-            <Grid item className="image-wrapper">
-              <img src={imageUrl} alt="profile" className="profile-image" />
-            </Grid>
-            <Grid item>
-              <Grid item>
-                <Typography variant="h4">{this.props.user.userName}</Typography>
-              </Grid>
-              <Grid container item flex-direction="column" alignItem="center">
-                <LocationOn />
-                <Typography display="inline" align="center">
-                  Toronto, Ontario
-                </Typography>
-              </Grid>
-            </Grid>
+      <Grid
+        container
+        item
+        spacing={2}
+        xs={12}
+        className={classes.profileWrapper}
+        alignItems="center"
+      >
+        <Grid item flex-direction="column" className={classes.profileShort}>
+          <Grid item>
+            <Typography variant="h4">{user.credentials.userName}</Typography>
           </Grid>
+
+          <Grid item>
+            <LocationOn />
+            <Typography display="inline">Toronto, Ontario</Typography>
+          </Grid>
+        </Grid>
+
+        <Grid item className="score">
+          <ScoreCircle value="86" />
         </Grid>
       </Grid>
     );

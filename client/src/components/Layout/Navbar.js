@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import clsx from "clsx";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 // MUI Stuff
@@ -15,6 +16,8 @@ import withStyles from "@material-ui/styles/withStyles";
 
 // MUI Icons
 import MenuIcon from "@material-ui/icons/Menu";
+
+import {connect} from "react-redux";
 
 const drawerWidth = 240;
 
@@ -100,4 +103,12 @@ class Navbar extends Component {
   }
 }
 
-export default withStyles(styles)(Navbar);
+Navbar.propTypes = {
+  user: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(Navbar));

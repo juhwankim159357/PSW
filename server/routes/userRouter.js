@@ -7,12 +7,20 @@ const multer = require("multer");
 const path = require("path");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const axios = require("axios");
+
+const JobPosting = require("../models/jobModel");
 
 const storage = multer.diskStorage({
   destination: "./public/resumes",
   filename: function (req, file, cb) {
-    cb(null, "resume-" + Date.now() + path.extname(file.originalname));
+    console.log(file.originalname);
+    cb(
+      null,
+      req.user +
+        "-" +
+        file.originalname.split(path.extname(file.originalname))[0] +
+        path.extname(file.originalname)
+    );
   },
 });
 
@@ -29,8 +37,7 @@ const { route } = require("./jobRouter");
 
 // Models
 const User = require("../models/userModel");
-const File = require("../models/fileModel");
-const { doesNotMatch } = require("assert");
+const Resume = require("../models/resumeModel");
 
 router.get("/test", (req, res) => {
   console.log("Test");
@@ -74,10 +81,35 @@ router.get("/", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    let { email, password, confirmPassword, userRole, userName } = req.body;
+    let contactInfo = {...req.body.contactInfo };
+    let {
+      email,
+      password,
+      confirmPassword,
+      userRole,
+      userName,
+    } = req.body;
 
+    console.log("Contact info ---", contactInfo);
+
+    console.log(contactInfo.firstName);
+    
+    //console.log(lastName);
+    //console.log(city);
+
+
+    console.log("Req.body ---", req.body);
+    
     // Validation
-    if (!email || !password || !confirmPassword || !userRole)
+    if (
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !userRole ||
+      !contactInfo.firstName ||
+      !contactInfo.lastName ||
+      !contactInfo.cellPhone
+    )
       return res
         .status(400)
         .json({ message: "Not all fields have been filled." });
@@ -87,6 +119,9 @@ router.post("/signup", async (req, res) => {
         .json({ message: "Password must be at least 5 characters long." });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords are not matching." });
+      
+      
+    console.log("here2");
 
     // TODO CHECK FOR VALID EMAIL, need regex
 
@@ -105,13 +140,19 @@ router.post("/signup", async (req, res) => {
     const newUser = new User({
       email,
       password: passwordHash,
+      contactInfo,
       userRole,
       userName,
     });
+
+    console.log("New user ---", newUser);
+
     const savedUser = await newUser.save();
     // Send the savedUser object back to front end
     res.json(savedUser);
+    console.log("end");
   } catch (err) {
+    console.log("Caught error");
     res.status(500).json({ error: err.message });
   }
 });
@@ -129,7 +170,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "No user with this email." });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    
+
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials." });
 
@@ -153,11 +194,14 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/:userName", (req, res) => {
+  const userData = {};
+
   User.findOne({ userName: req.params.userName })
     .then((userFound) => {
       if (!userFound) {
         return res.status(404).end();
       }
+      console.log(userFound);
       return res.status(200).json(userFound);
     })
     .catch((err) => next(err));
@@ -182,7 +226,6 @@ router.get("/user", auth, (req, res) => {
     });
 });
 
-// Update
 router.post("/user/update/:id", (req, res) => {
   console.log("Updating user.");
   const id = req.params.id;
@@ -208,6 +251,21 @@ router.post("/user/update/:id", (req, res) => {
   });
 });
 
+router.delete("/user/delete/:id", (req, res) => {
+  const id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if (!user) {
+      res.status(404).send("User not found.");
+    } else {
+      user
+        .delete()
+        .then(() => res.json("User deleted."))
+        .catch((err) => res.status(400).json("Error: " + err));
+    }
+  });
+});
+
 router.post("/forgot-password", (req, res) => {
   console.log("In /forgot-password");
 
@@ -226,12 +284,8 @@ router.post("/forgot-password", (req, res) => {
 
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiry = Date.now() + 3600000;
-
       user.save();
-
-      console.log("User Token ---: ", user.resetPasswordToken);
-      console.log("User Token Exp ---: ", user.resetPasswordTokenExpiry);
-
+      
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -290,7 +344,7 @@ router.get("/reset-password/:token", (req, res) => {
 router.post("/change-password", async (req, res) => {
   const salt = await bcrypt.genSalt();
   console.log("In change-password");
-  
+
   User.findOne({
     userName: req.body.userName,
   }).then((user) => {
@@ -319,36 +373,34 @@ router.post("/change-password", async (req, res) => {
   });
 });
 
-router.delete("/user/delete/:id", (req, res) => {
-  const id = req.params.id;
-
-  User.findById(id, (err, user) => {
-    if (!user) {
-      res.status(404).send("User not found.");
-    } else {
-      user
-        .delete()
-        .then(() => res.json("User deleted."))
-        .catch((err) => res.status(400).json("Error: " + err));
-    }
-  });
-});
-
-router.post("/upload", auth, upload.single("myFile"), (req, res) => {
+router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
   // TODO CLEANUP
-  // console.log("Request ---", req.body);
-  // console.log("Request user ---" , req.user);
-  // console.log("Request file ---", req.file);
+  console.log("Request ---", req.body);
+  console.log("Request user ---", req.user);
+  console.log("Request file ---", req.resume);
 
-  const file = new File({
-    meta_data: req.file,
-    user_id: req.user,
-  });
+  Resume.findOne({ user_id: req.user }, (err, exiFile) => {
+    let savedFile;
 
-  let savedFile = file;
+    if (!exiFile) {
+      const file = new Resume({
+        meta_data: req.resume,
+        user_id: req.user,
+        createdAt: Date.now(),
+      });
+      savedFile = file;
+    } else {
+      console.log("Updating file");
+      exiFile.meta_data = req.body.meta_data;
+      exiFile.user_id = req.user;
+      exiFile.createdAt = Date.now();
 
-  savedFile.save().then(() => {
-    res.send(savedFile);
+      savedFile = exiFile;
+    }
+
+    savedFile.save().then(() => {
+      res.send(savedFile);
+    });
   });
 });
 

@@ -16,6 +16,7 @@ export default function (state = initialState, action) {
         loading: true,
       };
     case SET_JOBS:
+      console.log("Setting jobSSSSSS");
       return {
         ...state,
         loading: false,
@@ -23,6 +24,7 @@ export default function (state = initialState, action) {
       };
 
     case SET_JOB:
+      console.log("Setting job");
       return {
         ...state,
         job: action.payload,

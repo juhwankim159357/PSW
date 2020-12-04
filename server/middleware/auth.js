@@ -9,7 +9,7 @@ const auth = (req, res, next) => {
         .json({ message: "No authentication token, authorization denied." });
     }
     else {
-      console.log("Token found");
+     
     }
 
     const verified = jwt.verify(token, process.env.JWT_SECRET);

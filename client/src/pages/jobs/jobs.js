@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import withStyle from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 //MUI
@@ -14,6 +13,8 @@ import theme from "../../util/theme";
 import {connect} from "react-redux";
 import {getAllJobs} from "../../redux/actions/dataActions";
 
+import Job from "../../components/Jobs/Job";
+
 const styles = {
   ...theme.vibeTheme,
 };
@@ -23,6 +24,7 @@ class jobs extends Component {
     this.props.getAllJobs();
   }
 
+
   constructor() {
     super();
     if (!localStorage.getItem("x-auth-token")) window.location = "/login";
@@ -31,26 +33,16 @@ class jobs extends Component {
     const { jobs, loading } = this.props.data;
     const { classes } = this.props;
 
+    console.log(jobs);
+    //const jobList = this.props.data.jobs;
 
-    const jobList = this.props.data.jobs;
+    let jobMarkup = jobs.map((job) => <Job key={job._id} job={job} />);
+
     return (
       <>
-      { jobList.map(item => 
-        <Card className={classes.card} key = {item._id}>
-          <Link to={`jobs/details/${item._id}`}>
-            <CardContent className={classes.content}>
-              <Typography variant="h5" component={Link}>
-                {item.positionTitle}
-              </Typography>
-              <Typography variant="body1" color="textPrimary">
-               {item.description}
-              </Typography>
-            </CardContent>
-          </Link>
-        </Card>
-      )}
+      {jobMarkup}
       </> 
-  
+    
     );
   }
 }

@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 // MUI Core
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -22,6 +23,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 //import withStyles from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/styles";
 
+import {connect} from "react-redux";
 
 const drawerWidth = 240;
 
@@ -51,9 +53,10 @@ const styles = (theme) => ({
 
 class PersistentDrawer extends Component {
   render() {
-    const { classes } = this.props;
+    const { user, classes } = this.props;
     let drawerHeaderText;
     var listMarkup;
+
     const unauthenticatedList = [
       {
         text: "Home",
@@ -92,23 +95,11 @@ class PersistentDrawer extends Component {
         linkTo: "/login",
       },
       {
-        text: "Review Resume",
-        linkTo: "",
-      },
-      {
-        text: "Review Application Status",
-        linkTo: "",
-      },
-      {
-        text: "test add jobs",
-        linkTo: "/jobs/addJob",
-      },
-      {
-        text: "test jobs",
+        text: "Job Postings",
         linkTo: "/jobs",
       },
       {
-        text: "test Questions",
+        text: "Questions",
         linkTo: "/Questions",
       },
     ];
@@ -127,8 +118,8 @@ class PersistentDrawer extends Component {
         linkTo: "login",
       },
       {
-        text: "Update Candidate Status",
-        linkTo: "",
+        test: "Post Job",
+        linkTo: "/jobs/addjob",
       },
       {
         text: "Interview",
@@ -136,8 +127,9 @@ class PersistentDrawer extends Component {
       },
     ];
 
+    console.log(this.props);
     // Conditional List Markup
-    if (this.props.userRole === "unauthenticated") {
+    if (!user.authenticated) {
       drawerHeaderText = "";
       listMarkup = (
         <List>
@@ -153,7 +145,7 @@ class PersistentDrawer extends Component {
           })}
         </List>
       );
-    } else if (this.props.userRole === "candidate") {
+    } else if (user.authenticated && user.credentials.userRole === "candidate") {
       drawerHeaderText = "Candidate";
       listMarkup = (
         <List>
@@ -169,7 +161,7 @@ class PersistentDrawer extends Component {
           })}
         </List>
       );
-    } else {
+    } else if(user.authenticated && user.credentials.userRole === "employer") {
       drawerHeaderText = "Employer";
       listMarkup = (
         <List>
@@ -214,4 +206,12 @@ class PersistentDrawer extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(PersistentDrawer));
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+PersistentDrawer.propTypes = {
+  user: PropTypes.object.isRequired,
+}
+
+export default connect(mapStateToProps)(withRouter(withStyles(styles)(PersistentDrawer)));
