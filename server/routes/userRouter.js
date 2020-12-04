@@ -404,4 +404,46 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
   });
 });
 
+router.post("/scoring", auth, async (req, res) => {
+  console.log(req.user, req.body.points);
+  const user = await User.findByIdAndUpdate(req.user,{
+    pswScore: req.body.points
+  }).catch(err => {
+    console.log(err)
+  })
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: `${process.env.EMAIL_ADDRESS}`,
+      pass: `${process.env.EMAIL_PASSWORD}`,
+    },
+  });
+
+  const mailOptions = {
+    from: `${process.env.EMAIL_ADDRESS}`,
+    to: `${user.email}`,
+    subject: "Confrimation Application",
+    text:
+      "You successfully appied for postion\n\n" +
+      "If you are quilified candidate, we will contacts you to set an interview by mail  \n\n" +
+      "Once again thank you for apply\n" +
+      "Have a nice day!"
+  };
+
+  console.log("Sending mail");
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      //console.error("There was an error: ", err);
+      res.status(502).send("Bad gateway.");
+    } else {
+      //console.log("Info ---", info);
+      console.log("Mail sent");
+      res.status(200).json("Email sent.");
+    }
+  });
+  
+});
+
 module.exports = router;
