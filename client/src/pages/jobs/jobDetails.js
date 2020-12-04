@@ -7,17 +7,14 @@ import { getJob } from "../../redux/actions/dataActions";
 
 
 export class jobDetails extends Component {
-
-    componentDidMount() {
-        //this.props.getJob(this.props);
-    }
-
-
     render() {
-        const { classes } = this.props
+        // Job details are in data.job 
+        const { data, classes } = this.props
         return (
             <div>
-                
+                <h3>Job Details</h3> 
+                <h4>{data.job.positionTitle}</h4>
+                <h4>{data.job.companyName}</h4>
             </div>
         )
     }
@@ -25,7 +22,6 @@ export class jobDetails extends Component {
 
 jobDetails.propTypes = {
     data: PropTypes.object.isRequired,
-    getJob: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({

@@ -12,7 +12,7 @@ import Typography from "@material-ui/core/Typography";
 
 // Redux
 import { connect } from "react-redux";
-import {getJob} from "../../redux/actions/dataActions";
+import { getJob } from "../../redux/actions/dataActions";
 
 const styles = {
   ...theme.vibeTheme,
