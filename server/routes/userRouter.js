@@ -90,16 +90,6 @@ router.post("/signup", async (req, res) => {
       userName,
     } = req.body;
 
-    console.log("Contact info ---", contactInfo);
-
-    console.log(contactInfo.firstName);
-    
-    //console.log(lastName);
-    //console.log(city);
-
-
-    console.log("Req.body ---", req.body);
-    
     // Validation
     if (
       !email ||
@@ -120,9 +110,6 @@ router.post("/signup", async (req, res) => {
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords are not matching." });
       
-      
-    console.log("here2");
-
     // TODO CHECK FOR VALID EMAIL, need regex
 
     // Check if there are existing users with same email
@@ -322,7 +309,7 @@ router.post("/forgot-password", (req, res) => {
 });
 
 // Checks token 
-router.post("/reset-password/:token", (req, res) => {\
+router.post("/reset-password/:token", async (req, res) => {
   const salt = await bcrypt.genSalt();
 
   User.findOne({
@@ -332,10 +319,9 @@ router.post("/reset-password/:token", (req, res) => {\
     },
   }).then((user) => {
     if (user === null) {
-      console.log("Pasword reset link is invalid or has expired.");
       res.json("Pasword reset link is invalid or has expired.");
     } else {
-      console.log("User exists.");
+      console.log(token);
       bcrypt
         .hash(req.body.password, salt)
         .then((hashedPassword) => {
@@ -345,7 +331,6 @@ router.post("/reset-password/:token", (req, res) => {\
           user.save();
         })
         .then(() => {
-          console.log("Password update");
           res.status(200).send({ message: "Password updated." });
         });
     }
