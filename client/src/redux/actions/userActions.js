@@ -56,6 +56,8 @@ export const logoutUser = () => (dispatch) => {
 };
 
 export const signupUser = (newUserData, history) => (dispatch) => {
+  console.log("Signing up");
+  console.log("newUserData ---", newUserData);
   dispatch({ type: LOADING_UI });
   axios
     .post("/users/signup", newUserData)
@@ -66,6 +68,7 @@ export const signupUser = (newUserData, history) => (dispatch) => {
       history.push("/");
     })
     .catch((err) => {
+      console.log("Err ---",err);
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data,
