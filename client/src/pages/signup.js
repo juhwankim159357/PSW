@@ -30,7 +30,13 @@ class signup extends Component {
     super();
     this.state = {
       email: "",
-      contactInfo: {},
+      firstName: "",
+      lastName: "",
+      city: "",
+      province: "",
+      country: "",
+      homePhone: "",
+      cellPhone:"",
       password: "",
       confirmPassword: "",
       userRole: "",
@@ -49,21 +55,30 @@ class signup extends Component {
     //Make new object for database
     const newUserData = {
       email: this.state.email,
+      contactInfo: {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        city: this.state.city,
+        province: this.state.province,
+        country: this.state.country,
+        homePhone: this.state.homePhone,
+        cellPhone: this.state.cellPhone,
+      },
       password: this.state.password,
       confirmPassword: this.state.confirmPassword,
       userRole: this.state.userRole,
     };
-
+    console.log(newUserData);
     this.props.signupUser(newUserData, this.props.history);
   };
 
   //jUHWAN
 
   handleChange = (event) => {
+    console.log(event);
     this.setState({
       [event.target.name]: event.target.value,
     });
-    console.log(event.target.value);
   };
 
   render() {
@@ -98,11 +113,10 @@ class signup extends Component {
                   id="userName"
                   name="userName"
                   type="text"
-                  minHeight="1.1875em"
                   label="User Name"
                   fullWidth
                   className={classes.textField}
-                  value={this.state.contactInfo.userName}
+                  value={this.state.userName}
                   //    helperText={errors.password}
                   //    error={errors.password ? true : false}
                   onChange={this.handleChange}
@@ -144,7 +158,7 @@ class signup extends Component {
             </Grid>
 
             <FormControl className={classes.formControl}>
-              <InputLabel id="userrole-select">User Role</InputLabel>
+              <InputLabel>User Role</InputLabel>
               <Select
                 id="userRole"
                 name="userRole"
@@ -169,7 +183,7 @@ class signup extends Component {
                   label="First Name"
                   fullWidth
                   className={classes.textField}
-                  value={this.state.contactInfo.firstName}
+                  value={this.state.firstName}
                   //    helperText={errors.password}
                   //    error={errors.password ? true : false}
                   onChange={this.handleChange}
@@ -184,7 +198,7 @@ class signup extends Component {
                   label="Last Name"
                   fullWidth
                   className={classes.textField}
-                  value={this.state.contactInfo.lastName}
+                  value={this.state.lastName}
                   //    helperText={errors.password}
                   //    error={errors.password ? true : false}
                   onChange={this.handleChange}
@@ -201,7 +215,7 @@ class signup extends Component {
                   label="City"
                   fullWidth
                   className={classes.textField}
-                  value={this.state.contactInfo.city}
+                  value={this.state.city}
                   //    helperText={errors.password}
                   //    error={errors.password ? true : false}
                   onChange={this.handleChange}
@@ -216,7 +230,7 @@ class signup extends Component {
                   label="Province"
                   fullWidth
                   className={classes.textField}
-                  value={this.state.contactInfo.province}
+                  value={this.state.province}
                   //    helperText={errors.password}
                   //    error={errors.password ? true : false}
                   onChange={this.handleChange}
@@ -231,7 +245,39 @@ class signup extends Component {
                   label="Country"
                   fullWidth
                   className={classes.textField}
-                  value={this.state.contactInfo.country}
+                  value={this.state.country}
+                  //    helperText={errors.password}
+                  //    error={errors.password ? true : false}
+                  onChange={this.handleChange}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2}>
+              <Grid item sm={4}>
+                <TextField
+                  id="homePhone"
+                  name="homePhone"
+                  type="text"
+                  label="Home Phone"
+                  fullWidth
+                  className={classes.textField}
+                  value={this.state.homePhone}
+                  //    helperText={errors.password}
+                  //    error={errors.password ? true : false}
+                  onChange={this.handleChange}
+                />
+              </Grid>
+
+              <Grid item sm={4}>
+                <TextField
+                  id="cellPhone"
+                  name="cellPhone"
+                  type="text"
+                  label="Cell Phone"
+                  fullWidth
+                  className={classes.textField}
+                  value={this.state.cellPhone}
                   //    helperText={errors.password}
                   //    error={errors.password ? true : false}
                   onChange={this.handleChange}
