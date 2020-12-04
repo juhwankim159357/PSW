@@ -301,7 +301,7 @@ router.post("/forgot-password", (req, res) => {
         text:
           "You are receiving this because you (or someone else) have requested a password reset for your account.\n\n" +
           "Please click on the following link, or paste this into your browser to reset your password within one hour of receiving it: \n\n" +
-          `https://psw-server.herokuapp.com/api/users/reset/${token}\n\n` +
+          `https://psw-client.herokuapp.com/reset/${token}\n\n` +
           "If you did not request this, please ignore this email and your password will remain unchanged.\n",
       };
 
@@ -321,8 +321,10 @@ router.post("/forgot-password", (req, res) => {
   });
 });
 
-router.get("/reset-password/:token", (req, res) => {
-  console.log(req.params.token);
+// Checks token 
+router.post("/reset-password/:token", (req, res) => {\
+  const salt = await bcrypt.genSalt();
+
   User.findOne({
     resetPasswordToken: req.params.token,
     resetPasswordTokenExpiry: {
@@ -333,17 +335,25 @@ router.get("/reset-password/:token", (req, res) => {
       console.log("Pasword reset link is invalid or has expired.");
       res.json("Pasword reset link is invalid or has expired.");
     } else {
-      res.status(200).send({
-        userName: user.userName,
-        message: "Link is good.",
-      });
+      console.log("User exists.");
+      bcrypt
+        .hash(req.body.password, salt)
+        .then((hashedPassword) => {
+          user.password = hashedPassword;
+          user.resetPasswordToken = null;
+          user.resetPasswordTokenExpiry = null;
+          user.save();
+        })
+        .then(() => {
+          console.log("Password update");
+          res.status(200).send({ message: "Password updated." });
+        });
     }
   });
 });
 
 router.post("/change-password", async (req, res) => {
   const salt = await bcrypt.genSalt();
-  console.log("In change-password");
 
   User.findOne({
     userName: req.body.userName,
