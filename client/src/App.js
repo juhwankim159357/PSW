@@ -100,7 +100,7 @@ class App extends Component {
                     <User {...props} isOpen={this.state.isOpen} />
                   )}
                 />
-                <Route exact path="/reset" component={reset}/>
+                <Route exact path="/reset/:token" component={reset}/>
 
                 <Route exact path="/jobs" component={jobs} />
                 <Route exact path="/jobs/addJob" component={addjob} />
