@@ -93,6 +93,24 @@ export const uploadResume = (formData, config) => (dispatch) => {
 
 }
 
+export const resetPassword = (resetData, history) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .post(`/users/reset-password/${resetData.token}`, resetData)
+    .then((res) => {
+      dispatch({ type: CLEAR_ERRORS });
+      history.push(`/login`);
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response,
+      });
+    });
+};
+
+
 const setAuthorizationHeader = (token) => {
   const XAuthToken = token;
   localStorage.setItem("x-auth-token", XAuthToken);
