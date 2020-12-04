@@ -14,7 +14,13 @@ const storage = multer.diskStorage({
   destination: "./public/resumes",
   filename: function (req, file, cb) {
     console.log(file.originalname);
-    cb(null, req.user + "-" + file.originalname.split(path.extname(file.originalname))[0] + path.extname(file.originalname));
+    cb(
+      null,
+      req.user +
+        "-" +
+        file.originalname.split(path.extname(file.originalname))[0] +
+        path.extname(file.originalname)
+    );
   },
 });
 
@@ -75,25 +81,35 @@ router.get("/", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    let { email, 
-      password, 
-      contactInfo: {
-        firstName,
-        lastName,
-        city,
-        province,
-        country,
-        homePhone,
-        cellPhone,
-      },
-      confirmPassword, 
-      userRole, 
-      userName
-     } = req.body;
+    let contactInfo = {...req.body.contactInfo };
+    let {
+      email,
+      password,
+      confirmPassword,
+      userRole,
+      userName,
+    } = req.body;
 
+    console.log("Contact info ---", contactInfo);
+
+    console.log(contactInfo.firstName);
+    
+    //console.log(lastName);
+    //console.log(city);
+
+
+    console.log("Req.body ---", req.body);
+    
     // Validation
-    if (!email || !password || !confirmPassword || !userRole || 
-      !contactInfo.firstName || !contactInfo.lastName || !contactInfo.cellPhone)
+    if (
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !userRole ||
+      !contactInfo.firstName ||
+      !contactInfo.lastName ||
+      !contactInfo.cellPhone
+    )
       return res
         .status(400)
         .json({ message: "Not all fields have been filled." });
@@ -103,6 +119,9 @@ router.post("/signup", async (req, res) => {
         .json({ message: "Password must be at least 5 characters long." });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords are not matching." });
+      
+      
+    console.log("here2");
 
     // TODO CHECK FOR VALID EMAIL, need regex
 
@@ -121,23 +140,19 @@ router.post("/signup", async (req, res) => {
     const newUser = new User({
       email,
       password: passwordHash,
-      contactInfo: {
-        firstName,
-        lastName,
-        city,
-        province,
-        country,
-        homePhone,
-        cellPhone,
-      },
+      contactInfo,
       userRole,
       userName,
     });
-    
+
+    console.log("New user ---", newUser);
+
     const savedUser = await newUser.save();
     // Send the savedUser object back to front end
     res.json(savedUser);
+    console.log("end");
   } catch (err) {
+    console.log("Caught error");
     res.status(500).json({ error: err.message });
   }
 });
@@ -269,12 +284,8 @@ router.post("/forgot-password", (req, res) => {
 
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiry = Date.now() + 3600000;
-
       user.save();
-
-      console.log("User Token ---: ", user.resetPasswordToken);
-      console.log("User Token Exp ---: ", user.resetPasswordTokenExpiry);
-
+      
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -368,16 +379,16 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
   console.log("Request user ---", req.user);
   console.log("Request file ---", req.resume);
 
-  Resume.findOne({user_id: req.user}, (err, exiFile) => {
+  Resume.findOne({ user_id: req.user }, (err, exiFile) => {
     let savedFile;
 
-    if(!exiFile) {
+    if (!exiFile) {
       const file = new Resume({
         meta_data: req.resume,
         user_id: req.user,
         createdAt: Date.now(),
       });
-      savedFile = file;      
+      savedFile = file;
     } else {
       console.log("Updating file");
       exiFile.meta_data = req.body.meta_data;
@@ -389,12 +400,8 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
 
     savedFile.save().then(() => {
       res.send(savedFile);
-    }); 
-  })
-
-
-  
+    });
+  });
 });
-
 
 module.exports = router;

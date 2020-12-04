@@ -80,6 +80,9 @@ router.post("/post-job", auth, async (req, res) => {
 
 router.post("/job/apply/:jobId", auth, async (req, res) => {
   try {
+
+    // add check to see if application already exists 
+    
     const jobpost = await JobPosting.findById(req.params.jobId);
     const applicant = await User.findById(req.user);
 
@@ -102,7 +105,7 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
 
     const savedApp = await newApplication.save();
 
-    // 
+    // For employers
     jobpost.applicants.push(savedApp.applicant)
     jobpost.save();
 
