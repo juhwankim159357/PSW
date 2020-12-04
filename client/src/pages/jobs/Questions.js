@@ -70,7 +70,7 @@ const Questions = () => {
       Uncomment the section below and update URL link to the corresponding 
       endpoint to post the question answer.
     */
-    axios.post('/putYourEndpointHere', { points });
+    axios.post('/users/scoring', { points });
 
     history.push('/');
   };

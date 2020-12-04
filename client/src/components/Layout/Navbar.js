@@ -17,7 +17,8 @@ import withStyles from "@material-ui/styles/withStyles";
 // MUI Icons
 import MenuIcon from "@material-ui/icons/Menu";
 
-import {connect} from "react-redux";
+import { connect } from "react-redux";
+import { logoutUser } from "../../redux/actions/userActions";
 
 const drawerWidth = 240;
 
@@ -48,11 +49,37 @@ class Navbar extends Component {
   constructor() {
     super();
     this.state = {
+      authenticated: false,
       open: false,
     };
   }
+
+  handleLogout = () => {
+    this.props.logoutUser();
+  };
+
   render() {
-    const { classes } = this.props;
+    const { user, classes } = this.props;
+
+    console.log(user.authenticated);
+    let rightSideMenu = !user.authenticated ? (
+      <Grid item>
+        <Button color="inherit" component={Link} to="/signup">
+          <Typography noWrap>Signup</Typography>
+        </Button>
+
+        <Button color="inherit" component={Link} to="/login">
+          <Typography noWrap>Login</Typography>
+        </Button>
+      </Grid>
+    ) : (
+      <Grid>
+        <Button color="inherit" onClick={this.handleLogout} component={Link} to="/login">
+          <Typography noWrap>Logout</Typography>
+        </Button>
+      </Grid>
+    );
+
     return (
       <Fragment>
         <AppBar
@@ -75,26 +102,11 @@ class Navbar extends Component {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Button color="inherit" omponent={Link} to="/">
-                  <Typography noWrap>
-                    Menu
-                  </Typography>
+                <Button color="inherit" component={Link} to="/">
+                  <Typography noWrap>Menu</Typography>
                 </Button>
               </Grid>
-
-              <Grid item>
-                <Button color="inherit" component={Link} to="/signup">
-                  <Typography noWrap>
-                    Signup
-                  </Typography>
-                </Button>
-
-                <Button color="inherit" component={Link} to="/login">
-                  <Typography noWrap>
-                    Login
-                  </Typography>
-                </Button>
-              </Grid>
+              {rightSideMenu}
             </Grid>
           </Toolbar>
         </AppBar>
@@ -105,10 +117,17 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   user: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Navbar));
+const mapActionsToProps = {
+  logoutUser,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(Navbar));

@@ -47,14 +47,6 @@ class Profile extends Component {
         className={classes.profileWrapper}
         alignItems="center"
       >
-        <Grid item>
-          <Avatar
-            src={imageUrl}
-            alt={user.credentials.userName}
-            className={classes.profileImg}
-          />
-        </Grid>
-
         <Grid item flex-direction="column" className={classes.profileShort}>
           <Grid item>
             <Typography variant="h4">{user.credentials.userName}</Typography>
