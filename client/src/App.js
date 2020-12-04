@@ -23,6 +23,7 @@ import Home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import User from "./pages/user";
+import reset from "./pages/reset";
 import jobs from "./pages/jobs/jobs";
 import addjob from "./pages/jobs/addJob";
 import jobdetails from "./pages/jobs/jobDetails";
@@ -50,18 +51,13 @@ class App extends Component {
     this.state = {
       isOpen: false,
       isLoaded: false,
-      userData: {
-        token: "",
-        user: {},
-      },
-      userRole: "candidate",
       authenticated: false,
     };
   }
 
-  setUserData = () => {
+  // setUserData = () => {
 
-  };
+  // };
 
   handleDrawerOpen = () => {
     this.setState({ isOpen: true });
@@ -104,6 +100,8 @@ class App extends Component {
                     <User {...props} isOpen={this.state.isOpen} />
                   )}
                 />
+                <Route exact path="/reset" component={reset}/>
+
                 <Route exact path="/jobs" component={jobs} />
                 <Route exact path="/jobs/addJob" component={addjob} />
                 <Route exact path="/jobs/job/details" component={jobdetails} />
