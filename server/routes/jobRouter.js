@@ -102,9 +102,8 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
         description: jobpost.description,
       }, 
     })
-
     const savedApp = await newApplication.save();
-
+    
     // For employers
     jobpost.applicants.push(savedApp.applicant)
     jobpost.save();

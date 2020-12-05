@@ -21,8 +21,6 @@ const styles = {
 export class Job extends Component {
 
   handleClick = (event) => {
-    console.log("click!");
-    console.log(this.props.job._id);
     this.props.getJob(this.props.job._id);
   };
 
@@ -32,6 +30,7 @@ export class Job extends Component {
       job: { positionTitle, description },
     } = this.props;
 
+    console.log(this.props.job);
     return (
       <Card className={classes.card} onClick={this.handleClick}>
         <CardContent className={classes.content}>

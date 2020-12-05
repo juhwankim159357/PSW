@@ -7,14 +7,9 @@ import { Link } from "react-router-dom";
 const SingleJob = props => {
   // console.log(props.match.params.id);
   const job = useMemo(() => props.data?.job, [props.data.job]);
-  useEffect(() => {
-    props.getJob(props.match.params.id);
-    return () => {};
-  }, [props]);
+
 
   console.log(job);
-
-  // console.log(job.applicants[0]);
 
   return (
     <div>

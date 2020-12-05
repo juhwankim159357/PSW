@@ -2,8 +2,8 @@
 const mongoose = require("mongoose");
 
 const jobApplicationSchema = new mongoose.Schema({
-    applicant: {type: Array },
-    jobPosting: {type: Array},
+    applicant: {type: Object },
+    jobPosting: {type: Object },
     status: {type: String},
 });
 
