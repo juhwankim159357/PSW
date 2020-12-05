@@ -311,7 +311,6 @@ router.post("/forgot-password", (req, res) => {
 // Checks token 
 router.post("/reset-password/:token", async (req, res) => {
   const salt = await bcrypt.genSalt();
-
   User.findOne({
     resetPasswordToken: req.params.token,
     resetPasswordTokenExpiry: {
@@ -321,7 +320,6 @@ router.post("/reset-password/:token", async (req, res) => {
     if (user === null) {
       res.json("Pasword reset link is invalid or has expired.");
     } else {
-      console.log(token);
       bcrypt
         .hash(req.body.password, salt)
         .then((hashedPassword) => {
