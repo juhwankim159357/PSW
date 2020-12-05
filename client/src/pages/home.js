@@ -37,9 +37,10 @@ class home extends Component {
       <Grid container className={clsx([classes.content], {
         [classes.contentShift]: this.props.isOpen,
       })}>
-        <Grid item >
-          Hello World Hello World Hello World
-        </Grid>
+        <p style={{ fontSize: 36, color: "#4a54f1", textAlign: "top", paddingTop: "10px" }}>A PSW Hiring Platform</p>
+        <div>
+      <img src="https://blog.academyoflearning.com/wp-content/uploads/2017/05/personal-support-worker-careers-1.png" alt="personal care worker"/>
+    </div>
       </Grid>
     );
   }

@@ -161,12 +161,14 @@ router.post("/login", async (req, res) => {
       { id: user._id, userName: user.userName },
       process.env.JWT_SECRET
     );
+    
     res.json({
       token,
       user: {
         userName: user.userName,
         email: user.email,
         userRole: user.userRole,
+        contactInfo: user.contactInfo,
       },
     });
   } catch (err) {
