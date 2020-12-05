@@ -61,7 +61,6 @@ class Navbar extends Component {
   render() {
     const { user, classes } = this.props;
 
-    console.log(user.authenticated);
     let rightSideMenu = !user.authenticated ? (
       <Grid item>
         <Button color="inherit" component={Link} to="/signup">

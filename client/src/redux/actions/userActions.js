@@ -16,6 +16,7 @@ export const loginUser = (userData, history) => (dispatch) => {
   axios
     .post("/users/login", userData)
     .then((res) => {
+      console.log(res);
       setAuthorizationHeader(res.data.token);
       dispatch({type: SET_USER, payload: res.data.user});
       dispatch({ type: CLEAR_ERRORS });
@@ -123,7 +124,6 @@ export const updatePoints = (pointData, config, history) => (dispatch) => {
     });
   });
 };
-
 
 const setAuthorizationHeader = (token) => {
   const XAuthToken = token;
