@@ -89,9 +89,8 @@ const SingleJob = props => {
                     color: "#000",
                     fontWeight: "normal",
                   }}
-                  //key={index}
                 >
-                  {applicant[0].email}
+                  {applicant.email}
                 </li>
               ))}
         </ul>

@@ -81,14 +81,8 @@ router.get("/", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    let contactInfo = {...req.body.contactInfo };
-    let {
-      email,
-      password,
-      confirmPassword,
-      userRole,
-      userName,
-    } = req.body;
+    let contactInfo = { ...req.body.contactInfo };
+    let { email, password, confirmPassword, userRole, userName } = req.body;
 
     // Validation
     if (
@@ -109,7 +103,7 @@ router.post("/signup", async (req, res) => {
         .json({ message: "Password must be at least 5 characters long." });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords are not matching." });
-      
+
     // TODO CHECK FOR VALID EMAIL, need regex
 
     // Check if there are existing users with same email
@@ -272,7 +266,7 @@ router.post("/forgot-password", (req, res) => {
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiry = Date.now() + 3600000;
       user.save();
-      
+
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -308,7 +302,7 @@ router.post("/forgot-password", (req, res) => {
   });
 });
 
-// Checks token 
+// Checks token
 router.post("/reset-password/:token", async (req, res) => {
   const salt = await bcrypt.genSalt();
   User.findOne({
@@ -399,11 +393,12 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
 
 router.post("/scoring", auth, async (req, res) => {
   console.log(req.user, req.body.points);
-  const user = await User.findByIdAndUpdate(req.user,{
-    pswScore: req.body.points
-  }).catch(err => {
-    console.log(err)
-  })
+
+  const user = await User.findByIdAndUpdate(req.user, {
+    pswScore: req.body.points,
+  }).catch((err) => {
+    console.log(err);
+  });
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -421,7 +416,7 @@ router.post("/scoring", auth, async (req, res) => {
       "You successfully appied for postion\n\n" +
       "If you are quilified candidate, we will contacts you to set an interview by mail  \n\n" +
       "Once again thank you for apply\n" +
-      "Have a nice day!"
+      "Have a nice day!",
   };
 
   console.log("Sending mail");
@@ -436,7 +431,6 @@ router.post("/scoring", auth, async (req, res) => {
       res.status(200).json("Email sent.");
     }
   });
-  
 });
 
 module.exports = router;

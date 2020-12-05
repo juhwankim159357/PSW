@@ -4,4 +4,5 @@ export {
     getUserData,
     signupUser,
     resetPassword,
+    updatePoints,
 } from "./userActions";

@@ -107,6 +107,23 @@ export const resetPassword = (resetData, history) => (dispatch) => {
     });
 };
 
+export const updatePoints = (pointData, config, history) => (dispatch) => {
+  console.log("IN updatePoints");
+  dispatch({type: LOADING_UI});
+
+  axios.post('/users/scoring', pointData, config)
+  .then((res) => {
+    dispatch({ type: CLEAR_ERRORS});
+    history.push('/jobs');
+  })
+  .catch((err) => {
+    dispatch({
+      type: SET_ERRORS,
+      payload: err.resonse,
+    });
+  });
+};
+
 
 const setAuthorizationHeader = (token) => {
   const XAuthToken = token;

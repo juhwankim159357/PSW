@@ -107,7 +107,6 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
     // For employers
     jobpost.applicants.push(savedApp.applicant)
     jobpost.save();
-
     // User Model
     applicant.applications.push(savedApp.jobPosting);
     applicant.save();
