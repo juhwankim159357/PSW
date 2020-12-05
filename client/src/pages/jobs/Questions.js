@@ -1,8 +1,13 @@
 import { Button } from '@material-ui/core';
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import YesNoQuestion from '../../components/YesNoQuestion';
+
+// Redux
+//import { connect } from 'react-redux';
+import {useDispatch} from "react-redux";
+import { updatePoints } from '../../redux/actions/userActions';
+
 
 const QUESTION_LIST = [
   {
@@ -54,6 +59,7 @@ const Questions = () => {
   const [values, setValues] = useState(
     new Array(QUESTION_LIST.length).fill('', 0, QUESTION_LIST.length)
   );
+
   const history = useHistory();
 
   const handleChange = (e, index) => {
@@ -62,17 +68,23 @@ const Questions = () => {
     setValues(newValues);
   };
 
+  const dispatch = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const points = values.filter((value) => value === 'yes').length;
+    
+    const pointData = {
+      points
+    };
 
-    /*
-      Uncomment the section below and update URL link to the corresponding 
-      endpoint to post the question answer.
-    */
-    axios.post('/users/scoring', { points });
-
-    history.push('/');
+    let token = window.localStorage.getItem('x-auth-token');
+    const config = {
+      headers: {
+        "x-auth-token": token,
+      },
+    };
+    dispatch(updatePoints(pointData, config, history));
   };
 
   return (
@@ -92,5 +104,6 @@ const Questions = () => {
     </form>
   );
 };
+
 
 export default Questions;

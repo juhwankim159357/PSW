@@ -80,19 +80,7 @@ class PersistentDrawer extends Component {
       {
         text: "Profile",
         linkTo: "/user",
-      },
-      {
-        text: "Upload Resume",
-        linkTo: "",
-      },
-      {
-        text: "Upload Application Materials",
-        linkTo: "",
         divider: true,
-      },
-      {
-        text: "Apply Position",
-        linkTo: "/login",
       },
       {
         text: "Job Postings",
@@ -114,20 +102,11 @@ class PersistentDrawer extends Component {
         linkTo: "",
       },
       {
-        text: "Check Candidate",
-        linkTo: "login",
-      },
-      {
         test: "Post Job",
         linkTo: "/jobs/addjob",
       },
-      {
-        text: "Interview",
-        linkTo: "",
-      },
     ];
 
-    console.log(this.props);
     // Conditional List Markup
     if (!user.authenticated) {
       drawerHeaderText = "";
@@ -145,7 +124,7 @@ class PersistentDrawer extends Component {
           })}
         </List>
       );
-    } else if (user.authenticated && user.credentials.userRole === "candidate") {
+    } else if (user.authenticated && user.credentials.userRole === "Candidate") {
       drawerHeaderText = "Candidate";
       listMarkup = (
         <List>
@@ -161,7 +140,7 @@ class PersistentDrawer extends Component {
           })}
         </List>
       );
-    } else if(user.authenticated && user.credentials.userRole === "employer") {
+    } else if(user.authenticated && user.credentials.userRole === "Employer") {
       drawerHeaderText = "Employer";
       listMarkup = (
         <List>
