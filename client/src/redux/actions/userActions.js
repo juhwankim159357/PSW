@@ -17,9 +17,6 @@ export const loginUser = (userData, history) => (dispatch) => {
     .post("/users/login", userData)
     .then((res) => {
       setAuthorizationHeader(res.data.token);
-      //console.log(res.data);
-      // Get logged in user data
-      //dispatch(getUserData());
       dispatch({type: SET_USER, payload: res.data.user});
       dispatch({ type: CLEAR_ERRORS });
       history.push(`/user`);

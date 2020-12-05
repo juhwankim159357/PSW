@@ -35,7 +35,7 @@ export class Job extends Component {
     return (
       <Card className={classes.card} onClick={this.handleClick}>
         <CardContent className={classes.content}>
-          <Typography variant="h5" component={Link} to={`jobs/job/details`}>
+          <Typography variant="h5" component={Link} to={`jobs/${this.props.job._id}`}>
             {positionTitle}
           </Typography>
           <Typography variant="body1" color="textPrimary">
