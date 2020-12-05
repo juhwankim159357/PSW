@@ -169,7 +169,10 @@ router.post("/login", async (req, res) => {
         email: user.email,
         userRole: user.userRole,
         contactInfo: user.contactInfo,
+        pswScore: user.pswScore,
+        applications: user.applications,
       },
+
     });
   } catch (err) {
     res.send(err.message);
