@@ -38,7 +38,7 @@ const styles = (theme) => ({
 class Profile extends Component {
   render() {
     const { user, classes } = this.props;
-    console.log("Profile user   ---", user);
+    
     return (
       <Grid
         container
@@ -60,7 +60,7 @@ class Profile extends Component {
         </Grid>
 
         <Grid item className="score">
-          <ScoreCircle value="86" />
+          <ScoreCircle value={(user.credentials.pswScore/11) * 100} />
         </Grid>
       </Grid>
     );
