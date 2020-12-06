@@ -2,6 +2,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 // Middleware
 const auth = require("../middleware/auth");
@@ -91,6 +92,7 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
 
     const jobpost = await JobPosting.findById(req.params.jobId);
     const applicant = await User.findById(req.user);
+    //console.log(applicant.resumePath);
 
     const appResume = applicant.resumePath;
 
@@ -110,6 +112,7 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
         description: jobpost.description,
       },
     });
+    
     const savedApp = await newApplication.save();
 
     // For employers
@@ -127,13 +130,14 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
       },
     });
 
-    const mailOptions = resumePath ? {
+    const mailOptions = appResume ? {
       from: `${process.env.EMAIL_ADDRESS}`,
       to: `${jobpost.employerEmail}`,
-      subject: `New application to ${jobPost.positionTitle}`,
+      subject: `New application to ${jobpost.positionTitle}`,
       attachments : [
         {
-          path: resumePath,
+          filename: 'resume.docx',
+          path: appResume,
         }
       ],
       text:
@@ -141,19 +145,19 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
         `Applicant Score:  ${applicant.pswScore}\n` +
         `Applicant Email:  ${applicant.email} \n` +
         `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n` +
-        `View their profile at:  https://psw-client.herokuapp.com/api/users/${applicant.userName}\n\n` +
-        `View your job posting at: https://psw-client.herokuapp.com/api/jobs/job/${jobpost._id}\n`,
+        //`View their profile at:  https://psw-client.herokuapp.com/users/${applicant.userName}\n\n` +
+        //`View your job posting at: https://psw-client.herokuapp.com/jobs/job/details/${jobpost._id}\n`,
     } : {
       from: `${process.env.EMAIL_ADDRESS}`,
       to: `${jobpost.employerEmail}`,
-      subject: `New application to ${jobPost.positionTitle}`,
+      subject: `New application to ${jobpost.positionTitle}`,
       text:
         `Applicant Name: ${applicant.contactInfo.firstName} + ${applicant.contactInfo.lastName} \n` +
         `Applicant Score:  ${applicant.pswScore}\n` +
         `Applicant Email:  ${applicant.email} \n` +
         `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n` +
-        `View their profile at:  https://psw-client.herokuapp.com/api/users/${applicant.userName}\n\n` +
-        `View your job posting at: https://psw-client.herokuapp.com/api/jobs/job/${jobpost._id}\n`,
+        //`View their profile at:  https://psw-client.herokuapp.com/users/${applicant.userName}\n\n` +
+        //`View your job posting at: https://psw-client.herokuapp.com/jobs/job/${jobpost._id}\n`,
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
