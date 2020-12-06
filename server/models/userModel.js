@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
         country: {type: String},
         homePhone: {type: String},
         cellPhone: {type: String},
+        
     },
     userName: {type: String},
     userRole: {type: String},
