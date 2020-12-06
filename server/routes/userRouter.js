@@ -13,7 +13,6 @@ const JobPosting = require("../models/jobModel");
 const storage = multer.diskStorage({
   destination: "./public/resumes",
   filename: function (req, file, cb) {
-    console.log(file.originalname);
     cb(
       null,
       req.user +
@@ -161,7 +160,7 @@ router.post("/login", async (req, res) => {
       { id: user._id, userName: user.userName },
       process.env.JWT_SECRET
     );
-    
+
     res.json({
       token,
       user: {
@@ -169,6 +168,8 @@ router.post("/login", async (req, res) => {
         email: user.email,
         userRole: user.userRole,
         contactInfo: user.contactInfo,
+        pswScore: user.pswScore,
+        applications: user.applications,
       },
     });
   } catch (err) {
@@ -331,43 +332,10 @@ router.post("/reset-password/:token", async (req, res) => {
   });
 });
 
-router.post("/change-password", async (req, res) => {
-  const salt = await bcrypt.genSalt();
-
-  User.findOne({
-    userName: req.body.userName,
-  }).then((user) => {
-    if (user) {
-      console.log("User exists.");
-      bcrypt
-        .hash(req.body.password, salt)
-        .then((hashedPassword) => {
-          user.password = hashedPassword;
-          user.resetPasswordToken = null;
-          user.resetPasswordTokenExpiry = null;
-          user.save();
-        })
-        .then(() => {
-          console.log("Password update");
-          res.status(200).send({ message: "Password updated." });
-        });
-    } else {
-      console.log(
-        "No user with this username exists in this database to update."
-      );
-      res
-        .status(404)
-        .json("No user with this username exists in this database to update.");
-    }
-  });
-});
-
 router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
-  // TODO CLEANUP
-  console.log("Request ---", req.body);
-  console.log("Request user ---", req.user);
-  console.log("Request file ---", req.resume);
-
+  const filePath = req.file.filename;
+  const user = await User.findById(req.user);
+  
   Resume.findOne({ user_id: req.user }, (err, exiFile) => {
     let savedFile;
 
@@ -385,11 +353,29 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
       exiFile.createdAt = Date.now();
 
       savedFile = exiFile;
-    }
 
+      user.resumePath = path.join(__dirname, `../public/resumes/${filePath}`);
+      user.save();
+    }
     savedFile.save().then(() => {
       res.send(savedFile);
     });
+  });
+});
+
+router.get("/file/:name", (req, res, next) => {
+  const options = {
+    root: path.join(__dirname, "../public/resumes"),
+  };
+
+  const fileName = req.params.name;
+
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      next(err);
+    } else {
+      console.log("Sent:", fileName);
+    }
   });
 });
 

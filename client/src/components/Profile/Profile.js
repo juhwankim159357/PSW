@@ -38,6 +38,7 @@ const styles = (theme) => ({
 class Profile extends Component {
   render() {
     const { user, classes } = this.props;
+    console.log("Profile user   ---", user);
     return (
       <Grid
         container
@@ -54,7 +55,7 @@ class Profile extends Component {
 
           <Grid item>
             <LocationOn />
-            <Typography display="inline">Toronto, Ontario</Typography>
+            <Typography display="inline">{`${user.credentials.contactInfo.city}, ${user.credentials.contactInfo.province}`}</Typography>
           </Grid>
         </Grid>
 

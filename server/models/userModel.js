@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
         country: {type: String},
         homePhone: {type: String},
         cellPhone: {type: String},
+        
     },
     userName: {type: String},
     userRole: {type: String},
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema({
     resetPasswordToken: {type: String},
     resetPasswordTokenExpiry: {type: Date},
     applications: {type: Array},
+    resumePath: {type: String},
 });
 
 // Use User to interact with User in database

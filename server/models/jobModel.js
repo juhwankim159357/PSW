@@ -9,7 +9,7 @@ const jobPostingSchema = new mongoose.Schema({
     duties: {type: Array, "default": [], required: true},
     requirements: {type: Array, "default": [],required: true},
     applicants: {type: Array, "default": []},
-    //posterId: {type: String, required: true},
+    employerEmail: {type: String, required: true},
 });
 
 // Use User to interact with User in database
