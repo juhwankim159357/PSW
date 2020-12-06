@@ -42,6 +42,7 @@ class user extends Component {
 
   render() {
     const { UI, classes } = this.props;
+    console.log(this.props);
     return (
       <Grid container
         spacing={2}
