@@ -16,10 +16,8 @@ export const loginUser = (userData, history) => (dispatch) => {
   axios
     .post("/users/login", userData)
     .then((res) => {
+      console.log(res);
       setAuthorizationHeader(res.data.token);
-      //console.log(res.data);
-      // Get logged in user data
-      //dispatch(getUserData());
       dispatch({type: SET_USER, payload: res.data.user});
       dispatch({ type: CLEAR_ERRORS });
       history.push(`/user`);
@@ -92,6 +90,40 @@ export const uploadResume = (formData, config) => (dispatch) => {
   });
 
 }
+
+export const resetPassword = (resetData, history) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .post(`/users/reset-password/${resetData.token}`, resetData)
+    .then((res) => {
+      dispatch({ type: CLEAR_ERRORS });
+      history.push(`/login`);
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response,
+      });
+    });
+};
+
+export const updatePoints = (pointData, config, history) => (dispatch) => {
+  console.log("IN updatePoints");
+  dispatch({type: LOADING_UI});
+
+  axios.post('/users/scoring', pointData, config)
+  .then((res) => {
+    dispatch({ type: CLEAR_ERRORS});
+    history.push('/jobs');
+  })
+  .catch((err) => {
+    dispatch({
+      type: SET_ERRORS,
+      payload: err.resonse,
+    });
+  });
+};
 
 const setAuthorizationHeader = (token) => {
   const XAuthToken = token;

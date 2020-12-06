@@ -3,4 +3,6 @@ export {
     logoutUser,
     getUserData,
     signupUser,
+    resetPassword,
+    updatePoints,
 } from "./userActions";

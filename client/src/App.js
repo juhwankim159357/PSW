@@ -26,6 +26,7 @@ import User from "./pages/user";
 import reset from "./pages/reset";
 import jobs from "./pages/jobs/jobs";
 import addjob from "./pages/jobs/addJob";
+import SingleJob from "./pages/jobs/SingleJob";
 import jobdetails from "./pages/jobs/jobDetails";
 import Questions from "./pages/jobs/Questions";
 
@@ -102,6 +103,7 @@ class App extends Component {
                 />
                 <Route exact path="/reset/:token" component={reset}/>
 
+                <Route exact path="/jobs/:id" component={SingleJob} />
                 <Route exact path="/jobs" component={jobs} />
                 <Route exact path="/jobs/addJob" component={addjob} />
                 <Route exact path="/jobs/job/details" component={jobdetails} />

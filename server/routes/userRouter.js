@@ -81,25 +81,9 @@ router.get("/", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    let contactInfo = {...req.body.contactInfo };
-    let {
-      email,
-      password,
-      confirmPassword,
-      userRole,
-      userName,
-    } = req.body;
+    let contactInfo = { ...req.body.contactInfo };
+    let { email, password, confirmPassword, userRole, userName } = req.body;
 
-    console.log("Contact info ---", contactInfo);
-
-    console.log(contactInfo.firstName);
-    
-    //console.log(lastName);
-    //console.log(city);
-
-
-    console.log("Req.body ---", req.body);
-    
     // Validation
     if (
       !email ||
@@ -119,9 +103,6 @@ router.post("/signup", async (req, res) => {
         .json({ message: "Password must be at least 5 characters long." });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords are not matching." });
-      
-      
-    console.log("here2");
 
     // TODO CHECK FOR VALID EMAIL, need regex
 
@@ -180,12 +161,14 @@ router.post("/login", async (req, res) => {
       { id: user._id, userName: user.userName },
       process.env.JWT_SECRET
     );
+    
     res.json({
       token,
       user: {
         userName: user.userName,
         email: user.email,
         userRole: user.userRole,
+        contactInfo: user.contactInfo,
       },
     });
   } catch (err) {
@@ -285,7 +268,7 @@ router.post("/forgot-password", (req, res) => {
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiry = Date.now() + 3600000;
       user.save();
-      
+
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -321,10 +304,9 @@ router.post("/forgot-password", (req, res) => {
   });
 });
 
-// Checks token 
-router.post("/reset-password/:token", (req, res) => {\
+// Checks token
+router.post("/reset-password/:token", async (req, res) => {
   const salt = await bcrypt.genSalt();
-
   User.findOne({
     resetPasswordToken: req.params.token,
     resetPasswordTokenExpiry: {
@@ -332,10 +314,8 @@ router.post("/reset-password/:token", (req, res) => {\
     },
   }).then((user) => {
     if (user === null) {
-      console.log("Pasword reset link is invalid or has expired.");
       res.json("Pasword reset link is invalid or has expired.");
     } else {
-      console.log("User exists.");
       bcrypt
         .hash(req.body.password, salt)
         .then((hashedPassword) => {
@@ -345,7 +325,6 @@ router.post("/reset-password/:token", (req, res) => {\
           user.save();
         })
         .then(() => {
-          console.log("Password update");
           res.status(200).send({ message: "Password updated." });
         });
     }
@@ -416,11 +395,12 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
 
 router.post("/scoring", auth, async (req, res) => {
   console.log(req.user, req.body.points);
-  const user = await User.findByIdAndUpdate(req.user,{
-    pswScore: req.body.points
-  }).catch(err => {
-    console.log(err)
-  })
+
+  const user = await User.findByIdAndUpdate(req.user, {
+    pswScore: req.body.points,
+  }).catch((err) => {
+    console.log(err);
+  });
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -438,7 +418,7 @@ router.post("/scoring", auth, async (req, res) => {
       "You successfully appied for postion\n\n" +
       "If you are quilified candidate, we will contacts you to set an interview by mail  \n\n" +
       "Once again thank you for apply\n" +
-      "Have a nice day!"
+      "Have a nice day!",
   };
 
   console.log("Sending mail");
@@ -453,7 +433,6 @@ router.post("/scoring", auth, async (req, res) => {
       res.status(200).json("Email sent.");
     }
   });
-  
 });
 
 module.exports = router;
