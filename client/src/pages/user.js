@@ -13,6 +13,9 @@ import FileUpload from "../components/Profile/FileUpload";
 import { connect } from "react-redux";
 import { getUserData } from "../redux/actions/dataActions";
 
+import Job from "../components/Jobs/Job";
+import { Typography } from "@material-ui/core";
+
 const styles = (theme) => ({
   content: {
     flexGrow: 1,
@@ -41,10 +44,20 @@ class user extends Component {
   }
 
   render() {
-    const { UI, classes } = this.props;
-    console.log(this.props);
+    const { UI, user, classes } = this.props;
+
+    const jobsList = user.credentials.applications;
+
+    let jobsAppliedTo =
+      jobsList.length !== 0 ? (
+        jobsList.map((job) => <Job key={job.id} job={job} />)
+      ) : (
+        <h3>No jobs applied to</h3>
+      );
+
     return (
-      <Grid container
+      <Grid
+        container
         spacing={2}
         className={clsx([classes.content], {
           [classes.contentShift]: UI.drawerOpen,
@@ -53,7 +66,7 @@ class user extends Component {
         <Profile />
         <Grid container spacing={2} className={classes.userWrapper}>
           <Grid item md={8}>
-            Review Resume
+            {jobsAppliedTo}
           </Grid>
           <Grid item>
             <FileUpload />
