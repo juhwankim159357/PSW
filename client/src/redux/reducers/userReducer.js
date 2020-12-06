@@ -8,7 +8,9 @@ import {
 const initialState = {
   authenticated: false,
   loading: false,
-  credentials: {},
+  credentials: {
+    contactInfo: {},
+  },
 };
 
 // eslint-disable-next-line
@@ -22,16 +24,19 @@ export default function (state = initialState, action) {
     case SET_UNAUTHENTICATED:
       return initialState;
     case SET_USER:
-      console.log(action.payload);
       return {
+        ...state,
         authenticated: true,
         loading: false,
         credentials: {
+          ...state.credentials,
           ...action.payload,
           contactInfo: {
+            ...state.credentials.contactInfo,
             ...action.payload.contactInfo,
-          }
-        }
+          },
+          applications: action.payload,
+        },
       };
     case LOADING_USER:
       return {
