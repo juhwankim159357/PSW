@@ -10,7 +10,7 @@ const { update } = require("../models/jobModel");
 // Routers
 const User = require("../models/userModel");
 const JobPosting = require("../models/jobModel");
-const JobApplication = require('../models/jobApplication');
+const JobApplication = require("../models/jobApplication");
 const Resume = require("../models/resumeModel");
 
 router.get("/test", (req, res) => {
@@ -44,35 +44,42 @@ router.post("/post-job", auth, async (req, res) => {
   //TODO Make job posting form
   //add to jobs collection
   console.log(req.user);
+
   try {
-    let {
-      positionTitle,
-      companyName,
-      contractType,
-      description,
-      duties,
-      requirements,
-    } = req.body;
+    const foundUser = await User.findById(req.user);
 
-    const existingPosting = await JobPosting.findOne({
-      positionTitle: positionTitle,
-    });
-    if (existingPosting && existingPosting.companyName == companyName)
-      return res.status(400).json({
-        message: "Duplicate posting, consider updating number of hires.",
+    if (foundUser.userRole == "Employer") {
+      let {
+        positionTitle,
+        companyName,
+        contractType,
+        description,
+        duties,
+        requirements,
+      } = req.body;
+
+      const existingPosting = await JobPosting.findOne({
+        positionTitle: positionTitle,
       });
+      if (existingPosting && existingPosting.companyName == companyName)
+        return res.status(400).json({
+          message: "Duplicate posting, consider updating number of hires.",
+        });
 
-    const newJobPost = new JobPosting({
-      positionTitle,
-      companyName,
-      contractType,
-      description,
-      duties,
-      requirements,
-      posterId: req.user,
-    });
-    const savedJobPost = await newJobPost.save();
-    res.json(savedJobPost);
+      const newJobPost = new JobPosting({
+        positionTitle,
+        companyName,
+        contractType,
+        description,
+        duties,
+        requirements,
+        employerEmail: foundUser.email,
+      });
+      const savedJobPost = await newJobPost.save();
+      res.json(savedJobPost);
+    } else {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -80,13 +87,14 @@ router.post("/post-job", auth, async (req, res) => {
 
 router.post("/job/apply/:jobId", auth, async (req, res) => {
   try {
+    // add check to see if application already exists
 
-    // add check to see if application already exists 
-    
     const jobpost = await JobPosting.findById(req.params.jobId);
     const applicant = await User.findById(req.user);
 
-    const newApplication = new JobApplication ({
+    const appResume = applicant.resumePath;
+
+    const newApplication = new JobApplication({
       applicant: {
         id: applicant._id,
         email: applicant.email,
@@ -100,16 +108,62 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
       jobPosting: {
         id: jobpost._id,
         description: jobpost.description,
-      }, 
-    })
+      },
+    });
     const savedApp = await newApplication.save();
-    
+
     // For employers
-    jobpost.applicants.push(savedApp.applicant)
+    jobpost.applicants.push(savedApp.applicant);
     jobpost.save();
     // User Model
     applicant.applications.push(savedApp.jobPosting);
     applicant.save();
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: `${process.env.EMAIL_ADDRESS}`,
+        pass: `${process.env.EMAIL_PASSWORD}`,
+      },
+    });
+
+    const mailOptions = resumePath ? {
+      from: `${process.env.EMAIL_ADDRESS}`,
+      to: `${jobpost.employerEmail}`,
+      subject: `New application to ${jobPost.positionTitle}`,
+      attachments : [
+        {
+          path: resumePath,
+        }
+      ],
+      text:
+        `Applicant Name: ${applicant.contactInfo.firstName} + ${applicant.contactInfo.lastName} \n` +
+        `Applicant Score:  ${applicant.pswScore}\n` +
+        `Applicant Email:  ${applicant.email} \n` +
+        `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n` +
+        `View their profile at:  https://psw-client.herokuapp.com/api/users/${applicant.userName}\n\n` +
+        `View your job posting at: https://psw-client.herokuapp.com/api/jobs/job/${jobpost._id}\n`,
+    } : {
+      from: `${process.env.EMAIL_ADDRESS}`,
+      to: `${jobpost.employerEmail}`,
+      subject: `New application to ${jobPost.positionTitle}`,
+      text:
+        `Applicant Name: ${applicant.contactInfo.firstName} + ${applicant.contactInfo.lastName} \n` +
+        `Applicant Score:  ${applicant.pswScore}\n` +
+        `Applicant Email:  ${applicant.email} \n` +
+        `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n` +
+        `View their profile at:  https://psw-client.herokuapp.com/api/users/${applicant.userName}\n\n` +
+        `View your job posting at: https://psw-client.herokuapp.com/api/jobs/job/${jobpost._id}\n`,
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error("There was an error: ", err);
+        res.status(502).send("Mail failed to send.");
+      } else {
+        console.log("Mail sent");
+      }
+    });
 
     res.status(200).json(savedApp);
   } catch (err) {
@@ -160,63 +214,4 @@ router.delete("/job/delete/:id", (req, res) => {
   });
 });
 
-// TODO Email or Notify the employer somehow
-// router.post("/forgot-password", (req, res) => {
-//   console.log("In /forgot-password");
-
-//   if (req.body.email === "") {
-//     res.status(400).send("Email required.");
-//   }
-
-//   User.findOne({
-//     email: req.body.email,
-//   }).then((user) => {
-//     if (user === null) {
-//       console.error("No user with that email exists.");
-//       res.status(403).send("No user with that email exists in the database.");
-//     } else {
-//       const token = crypto.randomBytes(32).toString("hex");
-
-//       user.resetPasswordToken = token;
-//       user.resetPasswordTokenExpiry = Date.now() + 3600000;
-
-//       user.save();
-
-//       console.log("User Token ---: ", user.resetPasswordToken);
-//       console.log("User Token Exp ---: ", user.resetPasswordTokenExpiry);
-
-//       const transporter = nodemailer.createTransport({
-//         service: "gmail",
-//         auth: {
-//           user: `${process.env.EMAIL_ADDRESS}`,
-//           pass: `${process.env.EMAIL_PASSWORD}`,
-//         },
-//       });
-
-//       const mailOptions = {
-//         from: `${process.env.EMAIL_ADDRESS}`,
-//         to: `${user.email}`,
-//         subject: "Password reset link",
-//         text:
-//           "You are receiving this because you (or someone else) have requested a password reset for your account.\n\n" +
-//           "Please click on the following link, or paste this into your browser to reset your password within one hour of receiving it: \n\n" +
-//           `https://psw-server.herokuapp.com/api/users/reset/${token}\n\n` +
-//           "If you did not request this, please ignore this email and your password will remain unchanged.\n",
-//       };
-
-//       console.log("Sending mail");
-
-//       transporter.sendMail(mailOptions, (err, info) => {
-//         if (err) {
-//           //console.error("There was an error: ", err);
-//           res.status(502).send("Bad gateway.");
-//         } else {
-//           //console.log("Info ---", info);
-//           console.log("Mail sent");
-//           res.status(200).json("Email sent.");
-//         }
-//       });
-//     }
-//   });
-// });
 module.exports = router;
