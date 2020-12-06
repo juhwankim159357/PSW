@@ -17,13 +17,14 @@ class FileUpload extends Component {
     event.preventDefault();
     let token = window.localStorage.getItem('x-auth-token');
     const formData = new FormData();
-    formData.append("myfile", this.state.file);
+    formData.append("MyResume", this.state.file);
     const config = {
       headers: {
         "x-auth-token": token,
         "content-type": "multipart/form-data",
       },
     };
+    
     this.props.uploadResume(formData, config);
   };
 
@@ -39,7 +40,7 @@ class FileUpload extends Component {
         <input
           type="file"
           className="custom-file-input"
-          name="myImage"
+          name="myResume"
           onChange={this.handleChange}
         />
        {/* {console.log(this.state.file)} */}
