@@ -35,7 +35,7 @@ export default function (state = initialState, action) {
             ...state.credentials.contactInfo,
             ...action.payload.contactInfo,
           },
-          applications: action.payload,
+          applications: action.payload.applications,
         },
       };
     case LOADING_USER:

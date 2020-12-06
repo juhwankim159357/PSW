@@ -36,7 +36,7 @@ class FileUpload extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>File Upload</h1>
+        <h1>Resume Upload</h1>
         <input
           type="file"
           className="custom-file-input"
@@ -45,7 +45,7 @@ class FileUpload extends Component {
         />
        {/* {console.log(this.state.file)} */}
         <button className="upload-button" type="submit">
-          Upload to DB
+          Upload
         </button>
       </form>
     );
