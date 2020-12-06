@@ -144,7 +144,7 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
         `Applicant Name: ${applicant.contactInfo.firstName} ${applicant.contactInfo.lastName} \n` +
         `Applicant Score:  ${applicant.pswScore}\n` +
         `Applicant Email:  ${applicant.email} \n` +
-        `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n` +
+        `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n`,
         //`View their profile at:  https://psw-client.herokuapp.com/users/${applicant.userName}\n\n` +
         //`View your job posting at: https://psw-client.herokuapp.com/jobs/job/details/${jobpost._id}\n`,
     } : {
@@ -155,7 +155,7 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
         `Applicant Name: ${applicant.contactInfo.firstName} ${applicant.contactInfo.lastName} \n` +
         `Applicant Score:  ${applicant.pswScore}\n` +
         `Applicant Email:  ${applicant.email} \n` +
-        `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n` +
+        `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n`,
         //`View their profile at:  https://psw-client.herokuapp.com/users/${applicant.userName}\n\n` +
         //`View your job posting at: https://psw-client.herokuapp.com/jobs/job/${jobpost._id}\n`,
     };
