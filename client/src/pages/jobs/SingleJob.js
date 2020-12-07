@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { getJob } from "../../redux/actions/dataActions";
 import { Link } from "react-router-dom";
 
+//Redux
+import {useSelector} from "react-redux";
+
+
 const SingleJob = props => {
-  // console.log(props.match.params.id);
-  const job = useMemo(() => props.data?.job, [props.data.job]);
-
-
-  console.log(job);
+  const job = useSelector(state => state.data.job);
 
   return (
     <div>
@@ -38,62 +38,6 @@ const SingleJob = props => {
         <span style={{ fontSize: "20px", color: "#000", fontWeight: "normal" }}>
           {job.contractType}
         </span>
-      </h5>
-      <h5 style={{ fontSize: "25px", color: "#00b2ca" }}>
-        <ul style={{ listStylePosition: "inside" }}>
-          duties : &nbsp;
-          {job.duties === undefined
-            ? ""
-            : job.duties.map((duty, index) => (
-                <li
-                  style={{
-                    fontSize: "20px",
-                    color: "#000",
-                    fontWeight: "normal",
-                  }}
-                  key={index}
-                >
-                  {duty}
-                </li>
-              ))}
-        </ul>
-      </h5>
-      <h5 style={{ fontSize: "25px", color: "#00b2ca" }}>
-        <ul style={{ listStylePosition: "inside" }}>
-          requirements : &nbsp;
-          {job.requirements === undefined
-            ? ""
-            : job.requirements.map((requirement, index) => (
-                <li
-                  style={{
-                    fontSize: "20px",
-                    color: "#000",
-                    fontWeight: "normal",
-                  }}
-                  key={index}
-                >
-                  {requirement}
-                </li>
-              ))}
-        </ul>
-      </h5>
-      <h5 style={{ fontSize: "25px", color: "#00b2ca" }}>
-        <ul style={{ listStylePosition: "inside" }}>
-          applicants : &nbsp;
-          {job.applicants === undefined
-            ? ""
-            : job.applicants.map((applicant, index) => (
-                <li
-                  style={{
-                    fontSize: "20px",
-                    color: "#000",
-                    fontWeight: "normal",
-                  }}
-                >
-                  {applicant.email}
-                </li>
-              ))}
-        </ul>
       </h5>
 
       <Link to={`/Questions`}>

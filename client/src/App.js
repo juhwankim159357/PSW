@@ -102,11 +102,10 @@ class App extends Component {
                   )}
                 />
                 <Route exact path="/reset/:token" component={reset}/>
-
-                <Route exact path="/jobs/:id" component={SingleJob} />
-                <Route exact path="/jobs" component={jobs} />
                 <Route exact path="/jobs/addJob" component={addjob} />
-                <Route exact path="/jobs/job/details" component={jobdetails} />
+                <Route exact path="/jobs/:id" component={SingleJob} /> 
+                <Route exact path="/jobs" component={jobs} />
+
                 <Route exact path="/Questions" component={Questions} />
               </Switch>
             </div>

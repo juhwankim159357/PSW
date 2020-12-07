@@ -39,7 +39,8 @@ class ForgotPassword extends Component {
               showError: true,
               messageFromServer: "",
             });
-          } else if (res.data === "Email sent.") {
+          } else if (res.data) {
+            alert(res.data);
             this.setState({
               showError: false,
               messageFromServer: res.data,
@@ -60,7 +61,7 @@ class ForgotPassword extends Component {
       <div>
         <form className="profile-form" onSubmit={this.handleSubmit}>
           <TextField
-            id="email"
+            id="forgotemail"
             label="Forgot password?"
             value={email}
             onChange={this.handleChange("email")}

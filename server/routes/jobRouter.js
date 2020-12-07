@@ -55,8 +55,6 @@ router.post("/post-job", auth, async (req, res) => {
         companyName,
         contractType,
         description,
-        duties,
-        requirements,
       } = req.body;
 
       const existingPosting = await JobPosting.findOne({
@@ -72,8 +70,6 @@ router.post("/post-job", auth, async (req, res) => {
         companyName,
         contractType,
         description,
-        duties,
-        requirements,
         employerEmail: foundUser.email,
       });
       const savedJobPost = await newJobPost.save();
@@ -89,10 +85,8 @@ router.post("/post-job", auth, async (req, res) => {
 router.post("/job/apply/:jobId", auth, async (req, res) => {
   try {
     // add check to see if application already exists
-
     const jobpost = await JobPosting.findById(req.params.jobId);
-    const applicant = await User.findById(req.user);
-    //console.log(applicant.resumePath);
+    const applicant = await User.findById(req.user);  
 
     const appResume = applicant.resumePath;
 
@@ -118,7 +112,9 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
     // For employers
     jobpost.applicants.push(savedApp.applicant);
     jobpost.save();
+
     // User Model
+    applicant.pswScore = req.body.points; 
     applicant.applications.push(savedApp.jobPosting);
     applicant.save();
 
@@ -145,8 +141,6 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
         `Applicant Score:  ${applicant.pswScore}\n` +
         `Applicant Email:  ${applicant.email} \n` +
         `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n`,
-        //`View their profile at:  https://psw-client.herokuapp.com/users/${applicant.userName}\n\n` +
-        //`View your job posting at: https://psw-client.herokuapp.com/jobs/job/details/${jobpost._id}\n`,
     } : {
       from: `${process.env.EMAIL_ADDRESS}`,
       to: `${jobpost.employerEmail}`,
@@ -156,16 +150,34 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
         `Applicant Score:  ${applicant.pswScore}\n` +
         `Applicant Email:  ${applicant.email} \n` +
         `Applicant Cell Number:  ${applicant.contactInfo.cellPhone}\n`,
-        //`View their profile at:  https://psw-client.herokuapp.com/users/${applicant.userName}\n\n` +
-        //`View your job posting at: https://psw-client.herokuapp.com/jobs/job/${jobpost._id}\n`,
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        console.error("There was an error: ", err);
-        res.status(502).send("Mail failed to send.");
+        console.log("Employer email error ---", err);
+        throw err;
       } else {
         console.log("Mail sent");
+      }
+    });
+
+    const toApplicantMail = {
+      from: `${process.env.EMAIL_ADDRESS}`,
+      to: `${applicant.email}`,
+      subject: "Confirmation Application",
+      text:
+        "You successfully applied for position\n\n" +
+        "If you are a qualified candidate, we will contact you to set an interview by mail  \n\n" +
+        "Once again thank you for your application\n" +
+        "Have a nice day!",
+    };
+
+    transporter.sendMail(toApplicantMail, (err, info) => {
+      if (err) {
+        console.log("Applicant email error ---", err);
+        throw err;
+      } else {
+        console.log("Applicant Mail sent");
       }
     });
 
@@ -190,8 +202,6 @@ router.post("/job/update/:id", (req, res) => {
       jobPost.companyName = req.body.companyName;
       jobPost.contractType = req.body.contractType;
       jobPost.description = req.body.description;
-      jobPost.duties = req.body.duties;
-      jobPost.requirements = req.body.requirements;
 
       jobPost
         .save()

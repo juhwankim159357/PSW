@@ -5,6 +5,7 @@ import {
   LOADING_UI,
   SET_UNAUTHENTICATED,
   LOADING_USER,
+  ADD_APPLICATION,
 } from "../types";
 import axios from "axios";
 
@@ -122,6 +123,27 @@ export const updatePoints = (pointData, config, history) => (dispatch) => {
       payload: err.resonse,
     });
   });
+};
+
+export const applyToJob = (appData, config, history) => (dispatch) => {
+  dispatch({type: LOADING_UI});
+  console.log(appData);
+  axios
+    .post(`/jobs/job/apply/${appData.jobID}`, appData, config, history)
+    .then((res) => {
+      dispatch({
+        type: ADD_APPLICATION,
+        payload: res.data,
+      })
+      history.push('/jobs');
+    })
+    .catch((err) => {
+      alert(err);
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response,
+      });
+    }); 
 };
 
 const setAuthorizationHeader = (token) => {

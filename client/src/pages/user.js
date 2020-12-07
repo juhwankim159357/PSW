@@ -47,9 +47,11 @@ class user extends Component {
     const { UI, user, classes } = this.props;
 
     const jobsList = user.credentials.applications;
+    
+    console.log(user);
 
     let jobsAppliedTo =
-      jobsList.length !== 0 ? (
+      jobsList.length !== 0 && jobsList ? (
         jobsList.map((job) => <Job key={job.id} job={job} />)
       ) : (
         <h3>No jobs applied to</h3>
