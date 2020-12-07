@@ -30,7 +30,6 @@ export class Job extends Component {
       job: { positionTitle, description },
     } = this.props;
 
-    console.log(this.props.job);
     return (
       <Card className={classes.card} onClick={this.handleClick}>
         <CardContent className={classes.content}>

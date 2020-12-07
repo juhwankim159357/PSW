@@ -3,6 +3,7 @@ import {
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
   LOADING_USER,
+  ADD_APPLICATION,
 } from "../types";
 
 const initialState = {
@@ -35,7 +36,7 @@ export default function (state = initialState, action) {
             ...state.credentials.contactInfo,
             ...action.payload.contactInfo,
           },
-          applications: action.payload,
+          applications: action.payload.applications,
         },
       };
     case LOADING_USER:
@@ -43,6 +44,22 @@ export default function (state = initialState, action) {
         ...state,
         loading: true,
       };
+
+    case ADD_APPLICATION:
+      console.log("IN ADD_APP");
+      console.log(state.credentials.applications);
+      console.log(action.payload.jobPosting);
+      return {
+        ...state,
+        loading: false,
+        credentials: {
+          ...state.credentials,
+          applications: [
+            ...state.credentials.applications,
+            action.payload.jobPosting,
+          ]
+        }
+      }
     default:
       return state;
   }

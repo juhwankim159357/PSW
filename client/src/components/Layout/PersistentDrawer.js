@@ -98,12 +98,12 @@ class PersistentDrawer extends Component {
         linkTo: "/",
       },
       {
-        text: "Post Job",
-        linkTo: "",
+        text: "Job Postings",
+        linkTo: "/jobs",
       },
       {
-        test: "Post Job",
-        linkTo: "/jobs/addjob",
+        text: "Post Job",
+        linkTo: "jobs/addJob",
       },
     ];
 

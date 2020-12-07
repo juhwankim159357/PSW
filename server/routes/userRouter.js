@@ -262,7 +262,7 @@ router.post("/forgot-password", (req, res) => {
   }).then((user) => {
     if (user === null) {
       console.error("No user with that email exists.");
-      res.status(403).send("No user with that email exists in the database.");
+      res.status(403).json({message: "No user with that email exists in the database."});
     } else {
       const token = crypto.randomBytes(32).toString("hex");
 
@@ -285,7 +285,7 @@ router.post("/forgot-password", (req, res) => {
         text:
           "You are receiving this because you (or someone else) have requested a password reset for your account.\n\n" +
           "Please click on the following link, or paste this into your browser to reset your password within one hour of receiving it: \n\n" +
-          `https://psw-client.herokuapp.com/reset/${token}\n\n` +
+          `https://psw-client.netlify.app/reset/${token}\n\n` +
           "If you did not request this, please ignore this email and your password will remain unchanged.\n",
       };
 
@@ -335,7 +335,8 @@ router.post("/reset-password/:token", async (req, res) => {
 router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
   const filePath = req.file.filename;
   const user = await User.findById(req.user);
-  
+  console.log("/upload req   ---", req);
+
   Resume.findOne({ user_id: req.user }, (err, exiFile) => {
     let savedFile;
 
@@ -358,7 +359,7 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
       user.save();
     }
     savedFile.save().then(() => {
-      res.send(savedFile);
+      res.status(200).send(savedFile);
     });
   });
 });
@@ -380,7 +381,6 @@ router.get("/file/:name", (req, res, next) => {
 });
 
 router.post("/scoring", auth, async (req, res) => {
-  console.log(req.user, req.body.points);
 
   const user = await User.findByIdAndUpdate(req.user, {
     pswScore: req.body.points,
