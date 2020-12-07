@@ -6,8 +6,8 @@ const jobPostingSchema = new mongoose.Schema({
     companyName: {type: String, required: true},
     contractType: {type: String, required: true},
     description: {type: String, required: true},
-    duties: {type: Array, "default": [], required: true},
-    requirements: {type: Array, "default": [],required: true},
+    duties: {type: Array, "default": []},
+    requirements: {type: Array, "default": []},
     applicants: {type: Array, "default": []},
     employerEmail: {type: String, required: true},
 });

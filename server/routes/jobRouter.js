@@ -55,8 +55,6 @@ router.post("/post-job", auth, async (req, res) => {
         companyName,
         contractType,
         description,
-        duties,
-        requirements,
       } = req.body;
 
       const existingPosting = await JobPosting.findOne({
@@ -72,8 +70,6 @@ router.post("/post-job", auth, async (req, res) => {
         companyName,
         contractType,
         description,
-        duties,
-        requirements,
         employerEmail: foundUser.email,
       });
       const savedJobPost = await newJobPost.save();
@@ -210,8 +206,6 @@ router.post("/job/update/:id", (req, res) => {
       jobPost.companyName = req.body.companyName;
       jobPost.contractType = req.body.contractType;
       jobPost.description = req.body.description;
-      jobPost.duties = req.body.duties;
-      jobPost.requirements = req.body.requirements;
 
       jobPost
         .save()
