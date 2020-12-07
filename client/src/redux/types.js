@@ -21,4 +21,5 @@ export const DIALOG_CLOSED = 'DIALOG_CLOSED';
 // Data
 export const SET_JOBS = 'SET_JOBS';
 export const SET_JOB = 'SET_JOB';
+export const ADD_JOB = 'ADD_JOB';
 export const DELETE_JOB = 'DELETE_JOB';

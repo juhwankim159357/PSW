@@ -21,14 +21,15 @@ export class addJob extends Component {
   constructor() {
     super();
     if (!localStorage.getItem("x-auth-token")) window.location = "/login";
-
   }
   render() {
     return (
       <Grid container>
+        <Grid item sm={2} />
+        <Grid item sm={10} />
+        <JobForm history={this.props.history} />
         <Grid item sm />
-          <JobForm history = {this.props.history}/>
-        <Grid item sm />
+        <Grid item sm={2} />
       </Grid>
     );
   }

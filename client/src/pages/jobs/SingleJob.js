@@ -39,62 +39,6 @@ const SingleJob = props => {
           {job.contractType}
         </span>
       </h5>
-      <h5 style={{ fontSize: "25px", color: "#00b2ca" }}>
-        <ul style={{ listStylePosition: "inside" }}>
-          Duties : &nbsp;
-          {job.duties === undefined
-            ? ""
-            : job.duties.map((duty, index) => (
-                <li
-                  style={{
-                    fontSize: "20px",
-                    color: "#000",
-                    fontWeight: "normal",
-                  }}
-                  key={index}
-                >
-                  {duty}
-                </li>
-              ))}
-        </ul>
-      </h5>
-      <h5 style={{ fontSize: "25px", color: "#00b2ca" }}>
-        <ul style={{ listStylePosition: "inside" }}>
-          Requirements : &nbsp;
-          {job.requirements === undefined
-            ? ""
-            : job.requirements.map((requirement, index) => (
-                <li
-                  style={{
-                    fontSize: "20px",
-                    color: "#000",
-                    fontWeight: "normal",
-                  }}
-                  key={index}
-                >
-                  {requirement}
-                </li>
-              ))}
-        </ul>
-      </h5>
-      {/* <h5 style={{ fontSize: "25px", color: "#00b2ca" }}>
-        <ul style={{ listStylePosition: "inside" }}>
-          applicants : &nbsp;
-          {job.applicants === undefined
-            ? ""
-            : job.applicants.map((applicant, index) => (
-                <li
-                  style={{
-                    fontSize: "20px",
-                    color: "#000",
-                    fontWeight: "normal",
-                  }}
-                >
-                  {applicant.email}
-                </li>
-              ))}
-        </ul>
-      </h5> */}
 
       <Link to={`/Questions`}>
         <button

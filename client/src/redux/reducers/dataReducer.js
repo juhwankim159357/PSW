@@ -1,5 +1,6 @@
+import { StarTwoTone } from "@material-ui/icons";
 import jobs from "../../pages/jobs/jobs";
-import { LOADING_DATA, SET_JOBS, SET_JOB, DELETE_JOB } from "../types";
+import { LOADING_DATA, SET_JOBS, SET_JOB, ADD_JOB } from "../types";
 
 const initialState = {
   loading: false,
@@ -29,7 +30,14 @@ export default function (state = initialState, action) {
         ...state,
         job: action.payload,
       };
-      
+
+    case ADD_JOB:
+      console.log(action.payload);
+      return {
+        ...state,
+        job: action.payload,
+      };
+
     default:
       return state;
   }

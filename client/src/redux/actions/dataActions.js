@@ -15,36 +15,52 @@ import axios from "axios";
 
 export const getAllJobs = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
-  console.log("Before fetching")
+  console.log("Before fetching");
   axios
     .get("/jobs")
     .then((res) => {
       dispatch({
         type: SET_JOBS,
-        payload: res.data
+        payload: res.data,
       });
     })
     .catch((err) => {
       dispatch({
         type: SET_JOBS,
-        payload: []
+        payload: [],
       });
     });
 };
 
 export const getJob = (jobId) => (dispatch) => {
-  dispatch({type: LOADING_UI});
+  dispatch({ type: LOADING_UI });
   axios
     .get(`/jobs/job/${jobId}`)
     .then((res) => {
       dispatch({
         type: SET_JOB,
-        payload: res.data
+        payload: res.data,
       });
-      dispatch({type: STOP_LOADING_UI });
+      dispatch({ type: STOP_LOADING_UI });
     })
     .catch((err) => console.log(err));
-}
+};
+
+export const postNewJob = (jobPostData, config, history) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .post("/jobs/post-job", jobPostData, config)
+    .then((res) => {
+      dispatch({
+        type: SET_JOB,
+        payload: res.data,
+      });
+      history.push("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 export const getUserData = (userName) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
@@ -60,4 +76,3 @@ export const getUserData = (userName) => (dispatch) => {
       })
   );
 };
-

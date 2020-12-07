@@ -131,7 +131,6 @@ export const applyToJob = (appData, config, history) => (dispatch) => {
   axios
     .post(`/jobs/job/apply/${appData.jobID}`, appData, config, history)
     .then((res) => {
-      console.log(appData);
       dispatch({
         type: ADD_APPLICATION,
         payload: res.data,
@@ -139,7 +138,7 @@ export const applyToJob = (appData, config, history) => (dispatch) => {
       history.push('/jobs');
     })
     .catch((err) => {
-      console.log(err);
+      alert(err);
       dispatch({
         type: SET_ERRORS,
         payload: err.response,

@@ -39,7 +39,8 @@ class ForgotPassword extends Component {
               showError: true,
               messageFromServer: "",
             });
-          } else if (res.data === "Email sent.") {
+          } else if (res.data) {
+            alert(res.data);
             this.setState({
               showError: false,
               messageFromServer: res.data,
