@@ -13,7 +13,7 @@ const cors = require('cors');
 const bodyParser = require("body-parser");
 const path = require('path');
 
-mongoose.connect(process.env.MONGODB_URI_TEST || process.env.MONGODB_URI || PORT, {
+mongoose.connect(process.env.MONGODB_URI || PORT, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

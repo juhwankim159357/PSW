@@ -1,9 +1,21 @@
+/***************************************************************************************************************************/
+//                                                                                                                         //
+//   Before doing unit test must add                                                                                       //
+// MONGODB_URI_TEST=mongodb+srv://admin:BthyMnJlVmZgZEt2@clusterpsw.rko8u.mongodb.net/testDB?retryWrites=true&w=majority   //               
+//       to  .env file     and.....                                                                                        //
+//                                                                                                                         //
+//    add  process.env.MONGODB_URI_TEST                                                                                    //
+//                                                                                                                         //
+//      to server.js's mongoose.connect 's as first port                                                                   //     
+//                                                                                                                         //
+/***************************************************************************************************************************/
+
+
 const request = require("supertest");
-//const request = request("mz");
 const app = require("../server");
 const mongoose = require("mongoose");
 
-describe("Root Test for user", () => {
+describe("1. Root Test for user", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -16,7 +28,7 @@ describe("Root Test for user", () => {
   });
 });
 
-describe("Sign up test", () => {
+describe("2. Sign up test", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -42,7 +54,7 @@ describe("Sign up test", () => {
   });
 });
 
-describe("user login", () => {
+describe("3. User login", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -78,7 +90,7 @@ describe("user login", () => {
   });
 });
 
-describe("user forget password", () => {
+describe("4. user forget password", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -112,7 +124,7 @@ describe("user forget password", () => {
   });
 });
 
-describe("Root Test for jobposting", () => {
+describe("5. Root Test for jobposting", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -125,7 +137,7 @@ describe("Root Test for jobposting", () => {
   });
 });
 
-describe("Posting Job posting Test for jobposting", () => {
+describe("6. Posting Job posting Test for jobposting", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
   
@@ -175,7 +187,7 @@ describe("Posting Job posting Test for jobposting", () => {
   });
 });
 
-describe("Detail Job posting Test for jobposting", () => {
+describe("7. Detail Job posting Test for jobposting", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -191,7 +203,7 @@ describe("Detail Job posting Test for jobposting", () => {
   });
 });
 
-describe("Applying Job posting Test for jobposting", () => {
+describe("8. Applying Job posting Test for jobposting", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     
@@ -234,7 +246,7 @@ describe("Applying Job posting Test for jobposting", () => {
   });
 });
 
-describe("user profile", () => {
+describe("9. user profile", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -274,49 +286,7 @@ describe("user profile", () => {
   });
 });
 
-describe("user scoring", () => {
-  afterEach((done) => {
-    mongoose.connection.db.dropCollection("users").catch(() => {});
-    return done();
-  });
-  it("user scoring test", async () => {
-    const res1 = await request(app)
-      .post("/api/users/signup")
-
-      .send({
-        email: "testsetest@outlook.com",
-        password: "Wnghks159357!",
-        confirmPassword: "Wnghks159357!",
-        userRole: "Candidate",
-        userName: "Juhwan Kim",
-        contactInfo: {
-          firstName: "Juhwan",
-          lastName: "kasdf",
-          cellPhone: "12345",
-        },
-      });
-    //expect(res.statusCode).toEqual(200);
-
-    const res2 = await request(app)
-      .post("/api/users/login")
-
-      .send({
-        email: "testsetest@outlook.com",
-        password: "Wnghks159357!",
-      });
-
-    const res3 = await request(app)
-      .post("/api/users/scoring")
-      .set("x-auth-token", res2.body.token)
-      .send({
-        points: 4,
-      });
-
-    expect(res3.statusCode).toEqual(200);
-  });
-});
-
-describe("user resume upload", () => {
+describe("10. user resume upload", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -359,7 +329,10 @@ describe("user resume upload", () => {
   });
 });
 
-describe("User resetting password", () => {
+
+// No longer used
+/*
+describe("12. User resetting password", () => {
   afterEach((done) => {
     mongoose.connection.db.dropCollection("users").catch(() => {});
     return done();
@@ -398,3 +371,49 @@ describe("User resetting password", () => {
     expect(res3.statusCode).toEqual(200);
   });
 });
+*/
+
+
+/*
+describe("10. user scoring", () => {
+  afterEach((done) => {
+    mongoose.connection.db.dropCollection("users").catch(() => {});
+    return done();
+  });
+  it("user scoring test", async () => {
+    const res1 = await request(app)
+      .post("/api/users/signup")
+
+      .send({
+        email: "testsetest@outlook.com",
+        password: "Wnghks159357!",
+        confirmPassword: "Wnghks159357!",
+        userRole: "Candidate",
+        userName: "Juhwan Kim",
+        contactInfo: {
+          firstName: "Juhwan",
+          lastName: "kasdf",
+          cellPhone: "12345",
+        },
+      });
+    //expect(res.statusCode).toEqual(200);
+
+    const res2 = await request(app)
+      .post("/api/users/login")
+
+      .send({
+        email: "testsetest@outlook.com",
+        password: "Wnghks159357!",
+      });
+
+    const res3 = await request(app)
+      .post("/api/users/scoring")
+      .set("x-auth-token", res2.body.token)
+      .send({
+        points: 4,
+      });
+
+    expect(res3.statusCode).toEqual(200);
+  });
+});
+*/

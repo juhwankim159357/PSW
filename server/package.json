@@ -22,7 +22,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "jest",
+    "utest": "jest",
     "start": "node server.js",
     "client": "cd .. && cd client && npm start",
     "dev": "concurrently \"node server.js\" \"npm run client\""
