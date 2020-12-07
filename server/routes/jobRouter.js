@@ -89,7 +89,6 @@ router.post("/post-job", auth, async (req, res) => {
 router.post("/job/apply/:jobId", auth, async (req, res) => {
   try {
     // add check to see if application already exists
-    
     const jobpost = await JobPosting.findById(req.params.jobId);
     const applicant = await User.findById(req.user);  
 
@@ -163,8 +162,8 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        console.error("There was an error: ", err);
-        res.status(502).send("Mail failed to send.");
+        console.log("Employer email error ---", err);
+        throw err;
       } else {
         console.log("Mail sent");
       }
@@ -172,7 +171,7 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
 
     const toApplicantMail = {
       from: `${process.env.EMAIL_ADDRESS}`,
-      to: `${user.email}`,
+      to: `${applicant.email}`,
       subject: "Confirmation Application",
       text:
         "You successfully applied for position\n\n" +
@@ -183,10 +182,10 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
 
     transporter.sendMail(toApplicantMail, (err, info) => {
       if (err) {
-        console.error("There was an error: ", err);
-        res.status(502).send("toApplicantMail failed to send.");
+        console.log("Applicant email error ---", err);
+        throw err;
       } else {
-        console.log("Mail sent");
+        console.log("Applicant Mail sent");
       }
     });
 
