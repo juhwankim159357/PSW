@@ -2,22 +2,32 @@ import React, { Component } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 
-import {connect} from "react-redux";
-import {uploadResume} from "../../redux/actions/userActions";
+import { connect } from "react-redux";
+import { uploadResume } from "../../redux/actions/userActions";
 
 class FileUpload extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
-      file: null,
+      selectedFile: null,
     };
   }
 
+  handleChange = (event) => {
+    console.log("EVENT TARGET   ---", event.target);
+    this.setState({
+      selectedFile: event.target.files[0],
+      loaded: 0,
+    }, () => console.log("SELECTED FILE   ---", this.state.selectedFile));
+  };
+
   handleSubmit = (event) => {
     event.preventDefault();
-    let token = window.localStorage.getItem('x-auth-token');
+
+    let token = window.localStorage.getItem("x-auth-token");
+
     const formData = new FormData();
-    formData.append("MyResume", this.state.file);
+    formData.append("MyResume", this.state.selectedFile);
     console.log("formData    ---", formData);
     const config = {
       headers: {
@@ -25,27 +35,21 @@ class FileUpload extends Component {
         "content-type": "multipart/form-data",
       },
     };
-    
+
     this.props.uploadResume(formData, config);
   };
 
-  handleChange = (event) => {
-    this.setState({
-      file: event.target.file,
-    });
-    console.log("fileupload state    ---", this.state);
-  };
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
         <h1>Resume Upload</h1>
         <input
           type="file"
+          name="file"
           className="custom-file-input"
-          name="MyResume"
           onChange={this.handleChange}
         />
-       {/* {console.log(this.state.file)} */}
+        {/* {console.log(this.state.file)} */}
         <button className="upload-button" type="submit">
           Upload
         </button>
@@ -57,10 +61,10 @@ class FileUpload extends Component {
 const mapStateToProps = (state) => ({
   user: state.user,
   UI: state.UI,
-})
+});
 
 const mapActionsToProps = {
-  uploadResume
-}
+  uploadResume,
+};
 
-export default connect(mapStateToProps,mapActionsToProps)(FileUpload);
+export default connect(mapStateToProps, mapActionsToProps)(FileUpload);

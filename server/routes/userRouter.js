@@ -337,7 +337,6 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
   const user = await User.findById(req.user);
   console.log("/upload req   ---", req);
 
-  
   Resume.findOne({ user_id: req.user }, (err, exiFile) => {
     let savedFile;
 
