@@ -335,7 +335,9 @@ router.post("/reset-password/:token", async (req, res) => {
 router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
   const filePath = req.file.filename;
   const user = await User.findById(req.user);
-  console.log(req);
+  console.log("/upload req   ---", req);
+
+  
   Resume.findOne({ user_id: req.user }, (err, exiFile) => {
     let savedFile;
 
@@ -380,6 +382,7 @@ router.get("/file/:name", (req, res, next) => {
 });
 
 router.post("/scoring", auth, async (req, res) => {
+
   const user = await User.findByIdAndUpdate(req.user, {
     pswScore: req.body.points,
   }).catch((err) => {
