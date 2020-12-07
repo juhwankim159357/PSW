@@ -6,10 +6,10 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-// import Radio from "@material-ui/core/Radio";
-// import RadioGroup from "@material-ui/core/RadioGroup";
-// import FormControlLabel from "@material-ui/core/FormControlLabel";
 import withStyle from "@material-ui/core/styles/withStyles";
+
+import { connect } from 'react-redux';
+import { postNewJob } from '../../redux/actions/dataActions';
 
 const styles = (theme) => ({
   ...theme.formTheme,
@@ -45,15 +45,14 @@ export class JobForm extends Component {
       requirements: this.state.requirements,
     };
 
-    axios
-      .post("/jobs/post-job", newJobPosting)
-      .then(() => {
-        this.props.history.push("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        this.props.history.push("/");
-      });
+    let token = localStorage.getItem("x-auth-token");
+    
+    const config = {
+      headers: {
+        "x-auth-token": token,
+      },
+    };
+    this.props.postNewJob(newJobPosting, config, this.props.history);
   };
 
   handleChange = (event) => {
@@ -64,7 +63,6 @@ export class JobForm extends Component {
 
   render() {
     const { classes } = this.props;
-    // const { error } = this.state;
 
     return (
       <Grid>
@@ -110,28 +108,28 @@ export class JobForm extends Component {
             value={this.state.description}
             onChange={this.handleChange}
           />
-          <TextField
-            id="duties"
-            name="duties"
-            type="duties"
-            label="Duties"
-            fullWidth
-            className={classes.textField}
-            value={this.state.duties}
-            onChange={this.handleChange}
-          />
-           <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Submit
-            </Button>
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Submit
+          </Button>
         </form>
       </Grid>
     );
   }
 }
 
-export default withStyle(styles)(JobForm);
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI,
+});
+
+const mapActionsToProps = {
+  postNewJob,
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyle(styles)(JobForm));
