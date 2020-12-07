@@ -51,6 +51,7 @@ export default function (state = initialState, action) {
         loading: false,
         credentials: {
           ...state.credentials,
+          ...action.payload,
           applications: action.payload.applications,
         }
       }

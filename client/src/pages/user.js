@@ -47,6 +47,8 @@ class user extends Component {
     const { UI, user, classes } = this.props;
 
     const jobsList = user.credentials.applications;
+    
+    console.log(user);
 
     let jobsAppliedTo =
       jobsList.length !== 0 && jobsList ? (
