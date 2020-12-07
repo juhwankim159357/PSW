@@ -262,7 +262,7 @@ router.post("/forgot-password", (req, res) => {
   }).then((user) => {
     if (user === null) {
       console.error("No user with that email exists.");
-      res.status(403).send("No user with that email exists in the database.");
+      res.status(403).json({message: "No user with that email exists in the database."});
     } else {
       const token = crypto.randomBytes(32).toString("hex");
 
@@ -358,7 +358,7 @@ router.post("/upload", auth, upload.single("MyResume"), async (req, res) => {
       user.save();
     }
     savedFile.save().then(() => {
-      res.send(savedFile);
+      res.status(200).send(savedFile);
     });
   });
 });
@@ -380,8 +380,6 @@ router.get("/file/:name", (req, res, next) => {
 });
 
 router.post("/scoring", auth, async (req, res) => {
-  console.log(req.user, req.body.points);
-
   const user = await User.findByIdAndUpdate(req.user, {
     pswScore: req.body.points,
   }).catch((err) => {

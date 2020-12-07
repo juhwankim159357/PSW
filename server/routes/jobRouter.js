@@ -89,10 +89,9 @@ router.post("/post-job", auth, async (req, res) => {
 router.post("/job/apply/:jobId", auth, async (req, res) => {
   try {
     // add check to see if application already exists
-
+    
     const jobpost = await JobPosting.findById(req.params.jobId);
-    const applicant = await User.findById(req.user);
-    //console.log(applicant.resumePath);
+    const applicant = await User.findById(req.user);  
 
     const appResume = applicant.resumePath;
 
@@ -118,7 +117,9 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
     // For employers
     jobpost.applicants.push(savedApp.applicant);
     jobpost.save();
+
     // User Model
+    applicant.pswScore = req.body.points; 
     applicant.applications.push(savedApp.jobPosting);
     applicant.save();
 
@@ -164,6 +165,26 @@ router.post("/job/apply/:jobId", auth, async (req, res) => {
       if (err) {
         console.error("There was an error: ", err);
         res.status(502).send("Mail failed to send.");
+      } else {
+        console.log("Mail sent");
+      }
+    });
+
+    const toApplicantMail = {
+      from: `${process.env.EMAIL_ADDRESS}`,
+      to: `${user.email}`,
+      subject: "Confirmation Application",
+      text:
+        "You successfully applied for position\n\n" +
+        "If you are a qualified candidate, we will contact you to set an interview by mail  \n\n" +
+        "Once again thank you for your application\n" +
+        "Have a nice day!",
+    };
+
+    transporter.sendMail(toApplicantMail, (err, info) => {
+      if (err) {
+        console.error("There was an error: ", err);
+        res.status(502).send("toApplicantMail failed to send.");
       } else {
         console.log("Mail sent");
       }

@@ -3,6 +3,7 @@ import {
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
   LOADING_USER,
+  SET_USER_APPLICATIONS,
 } from "../types";
 
 const initialState = {
@@ -43,6 +44,16 @@ export default function (state = initialState, action) {
         ...state,
         loading: true,
       };
+
+    case SET_USER_APPLICATIONS:
+      return {
+        ...state,
+        loading: false,
+        credentials: {
+          ...state.credentials,
+          applications: action.payload.applications,
+        }
+      }
     default:
       return state;
   }

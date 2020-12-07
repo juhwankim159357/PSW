@@ -29,7 +29,7 @@ export default function (state = initialState, action) {
         ...state,
         job: action.payload,
       };
-
+      
     default:
       return state;
   }
