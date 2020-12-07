@@ -285,7 +285,7 @@ router.post("/forgot-password", (req, res) => {
         text:
           "You are receiving this because you (or someone else) have requested a password reset for your account.\n\n" +
           "Please click on the following link, or paste this into your browser to reset your password within one hour of receiving it: \n\n" +
-          `https://psw-client.herokuapp.com/reset/${token}\n\n` +
+          `hhttps://psw-client.netlify.app/reset/${token}\n\n` +
           "If you did not request this, please ignore this email and your password will remain unchanged.\n",
       };
 
