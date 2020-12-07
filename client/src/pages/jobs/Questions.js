@@ -5,8 +5,9 @@ import YesNoQuestion from '../../components/YesNoQuestion';
 
 // Redux
 //import { connect } from 'react-redux';
-import {useDispatch} from "react-redux";
-import { updatePoints } from '../../redux/actions/userActions';
+import { useDispatch } from "react-redux";
+import {useSelector} from "react-redux";
+import { applyToJob } from '../../redux/actions/userActions';
 
 
 const QUESTION_LIST = [
@@ -69,13 +70,15 @@ const Questions = () => {
   };
 
   const dispatch = useDispatch();
+  const jobID = useSelector(state => state.data.job._id);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const points = values.filter((value) => value === 'yes').length;
     
-    const pointData = {
-      points
+    const appData = {
+      points,
+      jobID
     };
 
     let token = window.localStorage.getItem('x-auth-token');
@@ -84,7 +87,8 @@ const Questions = () => {
         "x-auth-token": token,
       },
     };
-    dispatch(updatePoints(pointData, config, history));
+
+    dispatch(applyToJob(appData, config, history));
   };
 
   return (

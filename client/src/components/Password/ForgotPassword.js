@@ -60,7 +60,7 @@ class ForgotPassword extends Component {
       <div>
         <form className="profile-form" onSubmit={this.handleSubmit}>
           <TextField
-            id="email"
+            id="forgotemail"
             label="Forgot password?"
             value={email}
             onChange={this.handleChange("email")}

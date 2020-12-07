@@ -33,14 +33,11 @@ class jobs extends Component {
     const { jobs, loading } = this.props.data;
     const { classes } = this.props;
 
-    console.log(jobs);
-    //const jobList = this.props.data.jobs;
-
     let jobMarkup = jobs.map((job) => <Job key={job._id} job={job} />);
 
     return (
       <>
-      {jobMarkup}
+        {jobMarkup}
       </> 
     
     );
