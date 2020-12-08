@@ -48,12 +48,13 @@ export default function (state = initialState, action) {
     case ADD_APPLICATION:
       console.log("IN ADD_APP");
       console.log(state.credentials.applications);
-      console.log(action.payload.jobPosting);
+      console.log("ACTION    ___", action.payload);
       return {
         ...state,
         loading: false,
         credentials: {
           ...state.credentials,
+          pswScore: action.payload.pswScore,
           applications: [
             ...state.credentials.applications,
             action.payload.jobPosting,

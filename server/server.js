@@ -37,3 +37,4 @@ app.use('/api/jobs', jobRouter);
 
 app.listen(PORT, () => console.log(`Node.js Server is running on port ${PORT}`));
 
+module.exports = app

@@ -131,9 +131,10 @@ export const applyToJob = (appData, config, history) => (dispatch) => {
   axios
     .post(`/jobs/job/apply/${appData.jobID}`, appData, config, history)
     .then((res) => {
+      res.data.pswScore = appData.points;
       dispatch({
         type: ADD_APPLICATION,
-        payload: res.data,
+        payload: res.data
       })
       history.push('/jobs');
     })
