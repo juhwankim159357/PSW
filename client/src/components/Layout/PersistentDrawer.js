@@ -96,6 +96,11 @@ class PersistentDrawer extends Component {
       {
         text: "Home",
         linkTo: "/",
+      },      
+      {
+        text: "Profile",
+        linkTo: "/user",
+        divider: true,
       },
       {
         text: "Job Postings",
